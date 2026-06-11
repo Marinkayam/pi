@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#07080B" />
+  <title>PI-2026-0314 — Dual Vulnerability Assessment · Marinai</title>
+  <meta name="description" content="A live security assessment, reframed as a portfolio. One critical finding: DesignFunctionNotFound. One available fix — a principal product designer who reads the backend spec and ships at machine speed." />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Dual Vulnerability Assessment — PI-2026-0314" />
+  <meta property="og:description" content="Two scans, three passes deep. One critical finding. One available fix." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+  <!-- Preloader / boot -->
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot__inner">
+      <div class="boot__row"><span class="boot__key">pi-recon</span><span class="boot__val" id="bootStatus">initializing</span></div>
+      <div class="boot__bar"><i id="bootBar"></i></div>
+      <div class="boot__pct" id="bootPct">0%</div>
+    </div>
+  </div>
+
+  <!-- WebGL hero canvas -->
+  <canvas id="webgl" aria-hidden="true"></canvas>
+
+  <!-- Grain + vignette overlays -->
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor" aria-hidden="true"><span></span></div>
+
+  <!-- Scan progress rail -->
+  <div class="rail" aria-hidden="true"><i id="railFill"></i></div>
+
+  <!-- Classification bar -->
+  <header class="topbar">
+    <span class="topbar__l">DUAL ASSESSMENT · GOOD FAITH</span>
+    <span class="topbar__brand" aria-hidden="true">π</span>
+    <span class="topbar__r">FOR: G. ARAZI / Y. RAMON</span>
+  </header>
+
+  <main>
+    <!-- ░░ HERO ░░ -->
+    <section class="hero" id="hero">
+      <div class="hero__meta reveal-up">PI-2026-0314 · JUNE 11, 2026 · 23H POST-STEALTH</div>
+      <h1 class="hero__title">
+        <span class="line"><span class="word">Dual</span> <span class="word">Vulnerability</span></span>
+        <span class="line"><span class="word">Assessment</span></span>
+      </h1>
+      <p class="hero__sub reveal-up">Two scans, three passes deep. <em>One critical finding. One available fix.</em></p>
+      <div class="hero__legend reveal-up">
+        <span><i class="dot dot--crit"></i>target: pi.security</span>
+        <span><i class="dot dot--ok"></i>asset: marinai</span>
+        <span class="hero__scrollcue">scroll to run scan <i></i></span>
+      </div>
+    </section>
+
+    <!-- ░░ §01 RECON ░░ -->
+    <section class="section" id="s01" data-index="01" data-label="Reconnaissance — Pi Security">
+      <div class="section__head">
+        <span class="section__num">§01</span>
+        <h2 class="section__title">Reconnaissance — Pi&nbsp;Security</h2>
+      </div>
+      <div class="terminal" data-terminal>
+        <div class="terminal__bar"><span></span><span></span><span></span><b>pi-recon — three-pass</b></div>
+        <div class="terminal__body">
+          <div class="terminal__cmd">$ pi-recon --target pi.security --passes 3</div>
+          <ul class="scan" id="scanPi"></ul>
+          <div class="terminal__sum" data-sum>3 passes · 12 sources · target locked · signal isolated</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ░░ §02 SIGNAL CHAIN ░░ -->
+    <section class="section" id="s02" data-index="02" data-label="Signal chain — why Pi exists">
+      <div class="section__head">
+        <span class="section__num">§02</span>
+        <h2 class="section__title">Signal chain — why Pi&nbsp;exists</h2>
+      </div>
+      <ol class="chain" id="chain"></ol>
+      <div class="callout reveal-up">
+        <b>AUDIENCE CALIBRATION ·</b> backers profiled: ex-Secret Service, Home Depot CISO, Armis, Tanium, CrowdStrike. Operator-led. Allergic to decks. This report formatted accordingly: zero slides, one pun.
+      </div>
+    </section>
+
+    <!-- ░░ §03 FINDING ░░ -->
+    <section class="section" id="s03" data-index="03" data-label="Finding">
+      <div class="section__head">
+        <span class="section__num">§03</span>
+        <h2 class="section__title">Finding</h2>
+      </div>
+      <article class="finding reveal-up">
+        <div class="finding__top">
+          <span class="mono dim">PI-2026-0314</span>
+          <span class="badge badge--crit">CRITICAL · 9.8</span>
+        </div>
+        <h3 class="finding__name glitch" data-text="DesignFunctionNotFound">DesignFunctionNotFound</h3>
+        <p class="finding__desc">An autonomous platform earns trust or loses it in the interface. That surface is currently unowned. Exploitable by any competitor with taste.</p>
+        <p class="kicker">EVIDENCE</p>
+        <div class="evidence" id="evidence"></div>
+      </article>
+    </section>
+
+    <!-- ░░ §04 COUNTER-SCAN ░░ -->
+    <section class="section" id="s04" data-index="04" data-label="Counter-scan — the fix">
+      <div class="section__head">
+        <span class="section__num">§04</span>
+        <h2 class="section__title">Counter-scan — the&nbsp;fix</h2>
+      </div>
+      <div class="terminal terminal--ok" data-terminal>
+        <div class="terminal__bar"><span></span><span></span><span></span><b>pi-recon — counter</b></div>
+        <div class="terminal__body">
+          <div class="terminal__cmd">$ pi-recon --target marinai --depth full</div>
+          <ul class="scan" id="scanMe"></ul>
+          <div class="terminal__sum terminal__sum--ok" data-sum>6 sources · classification: design-engineer hybrid · rarity: HIGH</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ░░ §05 ASSET PROFILE ░░ -->
+    <section class="section" id="s05" data-index="05" data-label="Asset profile">
+      <div class="section__head">
+        <span class="section__num">§05</span>
+        <h2 class="section__title">Asset profile</h2>
+      </div>
+      <article class="asset reveal-up">
+        <div class="finding__top">
+          <span class="mono dim">ASSET-TLV-001</span>
+          <span class="badge badge--ok">VERIFIED · AVAILABLE</span>
+        </div>
+        <h3 class="asset__name">Marinai</h3>
+        <p class="asset__role mono">Principal Product Designer · Tel Aviv · 15+ yrs</p>
+        <p class="asset__desc">The designer who reads the backend spec. Designs the pattern once, encodes it as code and agent context — and the violation never recurs.</p>
+
+        <p class="kicker">CAREER TRACE</p>
+        <div class="trace" id="trace"></div>
+
+        <p class="kicker">RECOVERED ARTIFACTS</p>
+        <div class="artifacts" id="artifacts"></div>
+
+        <p class="kicker">OBSERVED BEHAVIORS</p>
+        <ul class="behaviors">
+          <li>Builds the tool instead of writing the ticket.</li>
+          <li>Leads a competitive acrobatics team. Risk appetite: calibrated.</li>
+          <li>&ldquo;That&rsquo;s not a designer&rsquo;s job&rdquo; — not detected in any source.</li>
+        </ul>
+      </article>
+    </section>
+
+    <!-- ░░ §06 COMPATIBILITY ░░ -->
+    <section class="section" id="s06" data-index="06" data-label="Compatibility">
+      <div class="section__head">
+        <span class="section__num">§06</span>
+        <h2 class="section__title">Compatibility</h2>
+      </div>
+      <div class="match" id="match"></div>
+      <div class="match__verdict reveal-up">match confidence: HIGH · false-positive probability: 0.00</div>
+    </section>
+
+    <!-- ░░ §07 REMEDIATION ░░ -->
+    <section class="section" id="s07" data-index="07" data-label="Remediation">
+      <div class="section__head">
+        <span class="section__num">§07</span>
+        <h2 class="section__title">Remediation</h2>
+      </div>
+
+      <div class="diff reveal-up">
+        <div class="diff__file">org/team-structure.yaml</div>
+        <div class="diff__body">
+          <div class="diff__line diff__line--del">-  designers: 0</div>
+          <div class="diff__line diff__line--add">+  designers: 1</div>
+          <div class="diff__line diff__line--add">+    role: principal-product-designer</div>
+          <div class="diff__line diff__line--add">+    pattern: design-system-as-code</div>
+          <div class="diff__line diff__line--add">+    recurrence: prevented</div>
+        </div>
+      </div>
+
+      <div class="cta reveal-up">
+        <p class="cta__kicker">REMEDIATION AVAILABLE NOW</p>
+        <p class="cta__lead">This page is the proof of work: researched, designed, shipped as code — <em>by the candidate.</em></p>
+        <div class="cta__actions">
+          <a class="btn btn--primary" data-magnetic href="mailto:contact@pi.security?subject=Re:%20PI-2026-0314%20%E2%80%94%20DesignFunctionNotFound">Apply fix <span>&rarr;</span></a>
+          <a class="btn btn--ghost" data-magnetic href="https://marinka.me" target="_blank" rel="noreferrer">marinka.me</a>
+        </div>
+      </div>
+
+      <p class="footnote">Report ID ends in 0314. Not a coincidence. Not an irrational decision.</p>
+    </section>
+  </main>
+
+  <!-- Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1.0.42/dist/lenis.min.js"></script>
+
+  <!-- three.js as ES module -->
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+  </script>
+  <script type="module" src="assets/js/scene.js"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
