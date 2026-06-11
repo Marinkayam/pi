@@ -333,11 +333,43 @@ main{ position:relative; z-index:10; }
   display:flex; flex-direction:column; gap:10px;
 }
 .card__icon{
-  width:40px; height:40px; border-radius:11px; display:grid; place-items:center;
-  background:rgba(43,200,196,.12); color:var(--teal-deep); margin-bottom:6px;
+  width:60px; height:60px; border-radius:18px; display:grid; place-items:center;
+  background:linear-gradient(135deg, rgba(43,200,196,.20), rgba(43,200,196,.05));
+  border:1px solid rgba(43,200,196,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 8px 20px -12px rgba(43,200,196,.55);
+  color:var(--teal-deep); margin-bottom:10px;
+  transition:transform .35s var(--ease), box-shadow .35s;
 }
-.card--crit .card__icon{ background:rgba(240,116,56,.12); color:var(--orange-deep); }
-.card__icon svg{ width:21px; height:21px; }
+.card--crit .card__icon{
+  background:linear-gradient(135deg, rgba(240,116,56,.20), rgba(240,116,56,.05));
+  border-color:rgba(240,116,56,.28);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 8px 20px -12px rgba(240,116,56,.55);
+  color:var(--orange-deep);
+}
+.card:hover .card__icon{
+  transform:translateY(-4px) scale(1.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 14px 26px -12px rgba(43,200,196,.7);
+}
+.card--crit:hover .card__icon{ box-shadow:inset 0 1px 0 rgba(255,255,255,.8), 0 14px 26px -12px rgba(240,116,56,.7); }
+.card__icon svg{ width:32px; height:32px; overflow:visible; }
+
+/* stroke draw-in when the card grid reveals */
+.card__icon svg *{ stroke-dasharray:100; stroke-dashoffset:100; }
+.cards.is-in .card__icon svg *{ animation:icon-draw 1.1s var(--ease) forwards; }
+.cards.is-in .card:nth-child(2) .card__icon svg *{ animation-delay:.12s; }
+.cards.is-in .card:nth-child(3) .card__icon svg *{ animation-delay:.24s; }
+.cards.is-in .card:nth-child(4) .card__icon svg *{ animation-delay:.36s; }
+@keyframes icon-draw{ to{ stroke-dashoffset:0; } }
+
+/* idle micro-motion after the draw settles */
+.cards.is-in svg.i-float{ animation:i-float 3.8s ease-in-out 1.4s infinite; }
+@keyframes i-float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-3px); } }
+.cards.is-in svg.i-pulse{ animation:i-pulse 3.2s ease-in-out 1.4s infinite; }
+@keyframes i-pulse{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.07); } }
+.cards.is-in svg.i-swing{ animation:i-swing 3.4s ease-in-out 1.4s infinite; transform-origin:60% 60%; }
+@keyframes i-swing{ 0%,100%{ transform:rotate(0); } 30%{ transform:rotate(-9deg); } 65%{ transform:rotate(5deg); } }
+.cards.is-in svg.i-launch{ animation:i-launch 3.6s ease-in-out 1.4s infinite; }
+@keyframes i-launch{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(2.5px,-2.5px); } }
 .card__label{ font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--ink-dim); }
 .card__title{ font-size:16.5px; font-weight:650; letter-spacing:-.01em; margin:0; color:var(--ink); }
 .card__body{ font-size:14px; line-height:1.55; color:var(--ink-soft); margin:0; }
@@ -544,5 +576,6 @@ main{ position:relative; z-index:10; }
   .js .log li, .js #chain .chain-item, .js .rows .row, .js .plain li, .js .card{ opacity:1; transform:none; }
   .log__intel{ transition:none; }
   .log li.is-open .log__tog{ transition:none; }
+  .card__icon svg *{ stroke-dashoffset:0; animation:none; }
   .grain, .xhair, .ticker{ display:none; }
 }

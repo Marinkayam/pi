@@ -102,17 +102,17 @@
     return n;
   };
 
-  /* line icons (stroke = currentColor) */
-  const I = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  /* line icons (stroke = currentColor) — drawn in on reveal, idle motion after */
+  const I = (p, motion) => `<svg class="${motion || ""}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
   const ICONS = {
-    users: I('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M19 20c0-2.4-1-3.8-2.5-4.6"/>'),
-    book: I('<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 17h13"/><path d="M9 8h6"/>'),
-    layers: I('<path d="M12 3 21 8l-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>'),
-    shield: I('<path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>'),
-    package: I('<path d="M12 3 21 8v8l-9 5-9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/>'),
-    wrench: I('<path d="M15 7a4 4 0 0 1-5.2 5.2L5 17l2 2 4.8-4.8A4 4 0 0 0 17 9z"/>'),
-    cpu: I('<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v3M14 3v3M10 18v3M14 18v3M3 10h3M3 14h3M18 10h3M18 14h3"/>'),
-    rocket: I('<path d="M5 15c-1 2-1 4-1 4s2 0 4-1"/><path d="M9 15l-3-3c1-6 5-9 12-9 0 7-3 11-9 12z"/><circle cx="14" cy="10" r="1.6"/>'),
+    users: I('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M19 20c0-2.4-1-3.8-2.5-4.6"/>', "i-pulse"),
+    book: I('<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 17h13"/><path d="M9 8h6M9 11.5h4"/>', "i-pulse"),
+    layers: I('<path d="M12 3 21 8l-9 5-9-5z"/><path d="M3 12.5l9 5 9-5"/><path d="M3 17l9 5 9-5"/>', "i-float"),
+    shield: I('<path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>', "i-pulse"),
+    package: I('<path d="M12 3 21 8v8l-9 5-9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/><path d="M7.5 5.5l9 5"/>', "i-float"),
+    wrench: I('<path d="M15 7a4 4 0 0 1-5.2 5.2L5 17l2 2 4.8-4.8A4 4 0 0 0 17 9z"/><circle cx="6" cy="18" r="1" />', "i-swing"),
+    cpu: I('<rect x="7" y="7" width="10" height="10" rx="2.5"/><rect x="10.5" y="10.5" width="3" height="3" rx="1"/><path d="M10 3v3M14 3v3M10 18v3M14 18v3M3 10h3M3 14h3M18 10h3M18 14h3"/>', "i-pulse"),
+    rocket: I('<path d="M5 15c-1.4 2.2-1.4 4.4-1.4 4.4s2.2 0 4.4-1.4"/><path d="M9 15l-3-3c1-6 5-9 12-9 0 7-3 11-9 12z"/><circle cx="14" cy="10" r="1.7"/><path d="M15.5 3.5c2 .8 4.2 3 5 5"/>', "i-launch"),
   };
 
   /* ---------------- BUILD DOM ---------------- */
@@ -218,6 +218,9 @@
   buildCards("#artifacts", ARTIFACTS, { icons: ["package", "wrench", "cpu", "rocket"], label: (a) => a.tag, title: (a) => a.name, body: (a) => a.detail });
   buildMatch();
 
+  /* uniform pathLength so CSS can draw every shape with one rule */
+  document.querySelectorAll(".card__icon svg *").forEach((n) => n.setAttribute("pathLength", "100"));
+
   /* ---------------- SCROLL-WRITE HELPERS ---------------- */
   function splitWords(node) {
     const text = node.textContent;
@@ -254,6 +257,7 @@
       document.querySelectorAll("[data-write]").forEach((n) => (n.style.color = "var(--ink)"));
       document.querySelectorAll(".log li, #chain .chain-item, .rows .row, .plain li").forEach((n) => (n.style.opacity = 1));
       document.querySelectorAll(".card").forEach((n) => { n.style.opacity = 1; n.style.transform = "none"; });
+      document.querySelectorAll(".cards").forEach((g) => g.classList.add("is-in"));
       return;
     }
 
@@ -309,11 +313,11 @@
       });
     });
 
-    /* cards — staggered rise per row */
+    /* cards — staggered rise per row; icons draw in once visible */
     gsap.utils.toArray(".cards").forEach((grid) => {
       gsap.to(grid.querySelectorAll(".card"), {
         opacity: 1, y: 0, duration: 0.6, ease: "power3.out", stagger: 0.1,
-        scrollTrigger: { trigger: grid, start: "top 85%", once: true },
+        scrollTrigger: { trigger: grid, start: "top 85%", once: true, onEnter: () => grid.classList.add("is-in") },
       });
     });
 
