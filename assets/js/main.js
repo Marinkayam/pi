@@ -175,11 +175,6 @@
     const railFill = $("#railFill");
     ScrollTrigger.create({ start: 0, end: "max", onUpdate: (self) => { railFill.style.width = (self.progress * 100).toFixed(2) + "%"; } });
 
-    /* HERO — instant, fast */
-    gsap.set(".hero__title .word", { yPercent: 110 });
-    gsap.to(".hero__title .word", { yPercent: 0, duration: 0.9, ease: "power4.out", stagger: 0.07, delay: 0.08 });
-    gsap.from(".hero__meta, .hero__sub, .hero__cue", { opacity: 0, y: 14, duration: 0.7, ease: "power3.out", stagger: 0.08, delay: 0.35 });
-
     /* TEXT WRITES ON SCROLL — words fill ghost→ink, tied to scroll */
     gsap.utils.toArray("[data-write]").forEach((node) => {
       const words = splitWords(node);
@@ -228,6 +223,66 @@
     });
   }
 
+  /* ---------------- HERO INTRO (after boot) ---------------- */
+  function playHero() {
+    if (typeof gsap === "undefined") {
+      document.querySelectorAll(".hero__title .word").forEach((w) => (w.style.transform = "none"));
+      return;
+    }
+    gsap.set(".hero__title .word", { yPercent: 110 });
+    gsap.to(".hero__title .word", { yPercent: 0, duration: 0.9, ease: "power4.out", stagger: 0.07, delay: 0.05 });
+    gsap.from(".hero__meta, .hero__sub, .hero__cue", { opacity: 0, y: 14, duration: 0.7, ease: "power3.out", stagger: 0.08, delay: 0.3 });
+  }
+
+  /* ---------------- SECURITY-SCAN BOOT ---------------- */
+  function runBoot(done) {
+    const boot = $("#boot");
+    const bar = $("#bootBar");
+    const pct = $("#bootPct");
+    const status = $("#bootStatus");
+    const linesEl = $("#bootLines");
+    const finish = () => { boot.classList.add("is-done"); if (done) done(); };
+
+    // reduced / no-gsap: init() already revealed the hero — just clear the loader
+    if (reduced || typeof gsap === "undefined") { boot.classList.add("is-done"); return; }
+
+    const lines = [
+      "establishing secure channel",
+      "pi-recon v4 · three-pass",
+      "fingerprinting target: pi.security",
+      "isolating signal from noise",
+      "cross-referencing 12 sources",
+    ];
+    lines.forEach((l) => {
+      const li = el("li");
+      li.appendChild(el("span", null, l));
+      li.appendChild(el("span", "ok"));
+      linesEl.appendChild(li);
+    });
+    const lis = linesEl.querySelectorAll("li");
+
+    let i = 0;
+    const total = lines.length;
+    const iv = setInterval(() => {
+      if (i < total) {
+        lis[i].classList.add("in");
+        lis[i].querySelector(".ok").textContent = "ok";
+        i += 1;
+      }
+      const p = Math.round((i / total) * 100);
+      bar.style.width = p + "%";
+      pct.textContent = (p < 10 ? "0" : "") + p + "%";
+      if (i >= total) {
+        clearInterval(iv);
+        bar.style.width = "100%";
+        pct.textContent = "100%";
+        boot.classList.add("locked");
+        status.textContent = "TARGET LOCKED";
+        setTimeout(finish, 460);
+      }
+    }, 165);
+  }
+
   /* ---------------- CURSOR + MAGNETIC ---------------- */
   function initCursor() {
     if (reduced || window.matchMedia("(hover:none)").matches || typeof gsap === "undefined") return;
@@ -248,5 +303,9 @@
     });
   }
 
-  window.addEventListener("DOMContentLoaded", () => { init(); initCursor(); });
+  window.addEventListener("DOMContentLoaded", () => {
+    init();
+    initCursor();
+    runBoot(playHero);
+  });
 })();
