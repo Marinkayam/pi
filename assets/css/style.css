@@ -42,20 +42,10 @@ body{
 a{ color:inherit; }
 em{ font-style:normal; color:var(--ink); }
 
-/* ---------- Fixed WebGL canvas ---------- */
-#webgl{
-  position:fixed; inset:0; width:100vw; height:100vh;
-  z-index:0; pointer-events:none; opacity:0;
-  transition:opacity 1s ease;
-}
-#webgl.is-ready{ opacity:1; }
-
-/* depth wash so type stays legible over the canvas */
+/* subtle signal glow from the top — sets the mood without a 3D scene */
 body::before{
   content:""; position:fixed; inset:0; z-index:1; pointer-events:none;
-  background:
-    radial-gradient(110% 80% at 50% -10%, rgba(106,224,255,.06), transparent 55%),
-    linear-gradient(180deg, rgba(7,8,11,.35) 0%, rgba(7,8,11,.55) 50%, rgba(7,8,11,.8) 100%);
+  background:radial-gradient(90% 60% at 50% -15%, rgba(106,224,255,.05), transparent 55%);
 }
 
 /* static subtle grain (no animation — cheaper) */
@@ -231,7 +221,7 @@ main{ position:relative; z-index:10; }
 .hero__meta{ margin:0 0 24px; }
 .hero__title{
   font-size:clamp(46px,12vw,132px); line-height:.92; font-weight:700; letter-spacing:-.035em;
-  margin:0; mix-blend-mode:screen;
+  margin:0;
 }
 .hero__title .line{ display:block; overflow:hidden; }
 .hero__title .word{ display:inline-block; transform:translateY(110%); }
