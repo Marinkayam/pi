@@ -43,12 +43,21 @@
   ];
 
   const ME_SOURCES = [
-    { name: "marinka.me", kind: "web", intel: "" },
-    { name: "npm — @monto/ui-v2", kind: "npm", intel: "" },
-    { name: "monto.io — two production platforms", kind: "work", intel: "" },
-    { name: "linkedin.com — AI-design writing", kind: "social", intel: "" },
-    { name: "College of Management — GenAI course", kind: "edu", intel: "" },
-    { name: "shipped side projects", kind: "lab", intel: "" },
+    { name: "marinka.me", kind: "web",
+      intel: "shipped AI products recovered: Claude Vision PWA, API content studio, ops-automation builder — designed, coded, deployed solo. fix vector: zero handoff tax between design and production.",
+      url: "https://marinka.me" },
+    { name: "npm — @monto/ui-v2", kind: "npm",
+      intel: "design system built from zero, published as code: 200+ React components live in production. fix vector: the pattern is designed once, encoded once — the violation can’t recur.",
+      url: "https://www.npmjs.com/package/@monto/ui-v2" },
+    { name: "monto.io — two production platforms", kind: "work",
+      intel: "sole designer on B2B fintech platforms moving real money: approvals, exceptions, trust surfaces. ~860 violations fixed at the system level. fix vector: remediation at the root, not the symptom — Pi’s founding principle, applied to design.",
+      url: "https://monto.io" },
+    { name: "linkedin.com — AI-design writing", kind: "social",
+      intel: "public record of design governance encoded as agent context: AI ships on-system UI, unsupervised. fix vector: the exact discipline an autonomous platform needs to earn human trust." },
+    { name: "College of Management — GenAI course", kind: "edu",
+      intel: "teaches Generative AI to ~200 students/year. fix vector: translating machine reasoning for humans is the day job — that is the unowned surface at Pi." },
+    { name: "shipped side projects", kind: "lab",
+      intel: "builds the tool instead of writing the ticket; leads a competitive acrobatics team — risk appetite calibrated. fix vector: ships at machine speed on Pi’s own stack, Claude-Mythos, daily." },
   ];
 
   const CHAIN = [
