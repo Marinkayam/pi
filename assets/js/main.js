@@ -351,14 +351,18 @@
     // reduced / no-gsap: init() already revealed the hero — just clear the loader
     if (reduced || typeof gsap === "undefined") { boot.classList.add("is-done"); return; }
 
+    const hex = () => "0x" + ((Math.random() * 0xffffff) | 0).toString(16).padStart(6, "0").toUpperCase();
     const lines = [
-      "establishing secure channel",
-      "pi-recon v4 · three-pass",
-      "fingerprinting target: pi.security",
-      "isolating signal from noise",
-      "cross-referencing 12 sources",
+      ["init pi-recon kernel v4.2.1", "ok"],
+      ["loading exploit signatures … 48,213", "ok"],
+      ["handshake TLS1.3 · ECDHE-P521", hex()],
+      ["port sweep 0–65535 · open: 80, 443, 0314", "ok"],
+      ["fingerprint pi.security → match", hex()],
+      ["deploying counter-scan: marina", "ok"],
+      ["context graph · 12 sources indexed", "ok"],
     ];
-    lines.forEach((l) => {
+    const phases = ["SCANNING", "DECRYPTING", "TRACING"];
+    lines.forEach(([l]) => {
       const li = el("li");
       li.appendChild(el("span", null, l));
       li.appendChild(el("span", "ok"));
@@ -371,21 +375,22 @@
     const iv = setInterval(() => {
       if (i < total) {
         lis[i].classList.add("in");
-        lis[i].querySelector(".ok").textContent = "ok";
+        lis[i].querySelector(".ok").textContent = lines[i][1];
         i += 1;
       }
       const p = Math.round((i / total) * 100);
       bar.style.width = p + "%";
       pct.textContent = (p < 10 ? "0" : "") + p + "%";
+      status.textContent = phases[Math.min(phases.length - 1, Math.floor((i / total) * phases.length))];
       if (i >= total) {
         clearInterval(iv);
         bar.style.width = "100%";
         pct.textContent = "100%";
         boot.classList.add("locked");
-        status.textContent = "TARGET LOCKED";
-        setTimeout(finish, 460);
+        status.textContent = "ACCESS GRANTED";
+        setTimeout(finish, 520);
       }
-    }, 165);
+    }, 130);
   }
 
   /* ---------------- CURSOR + MAGNETIC ---------------- */
