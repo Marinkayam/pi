@@ -1,10 +1,11 @@
 /* ============================================================
    DUAL VULNERABILITY ASSESSMENT — interaction layer
-   GSAP + ScrollTrigger + Lenis · data injection · cursor
+   Kinetic type · text writes on scroll · GSAP + ScrollTrigger + Lenis
    ============================================================ */
 (function () {
   "use strict";
 
+  document.documentElement.classList.add("js");
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------------- DATA ---------------- */
@@ -77,13 +78,10 @@
   };
 
   /* ---------------- BUILD DOM ---------------- */
-  function buildScan(target, items) {
+  function buildLog(target, items) {
     const ul = $(target);
     items.forEach((it) => {
-      if (it.divider) {
-        ul.appendChild(el("li", "div", `── ${it.divider} ──`));
-        return;
-      }
+      if (it.divider) { ul.appendChild(el("li", "div", `── ${it.divider}`)); return; }
       const li = el("li", it.amber ? "amber" : "");
       li.appendChild(el("span", "src", `<b>[${it.kind}]</b> ${it.name}`));
       li.appendChild(el("span", "stat", it.amber ? "✓ resolved" : "✓ indexed"));
@@ -92,220 +90,140 @@
   }
 
   function buildChain() {
-    const ol = $("#chain");
-    CHAIN.forEach((c) => {
-      const li = el("li");
-      li.appendChild(el("span", "chain__node"));
-      li.appendChild(el("span", "chain__tag", c.tag));
-      li.appendChild(el("p", "chain__text", c.text));
-      ol.appendChild(li);
-    });
-    const li = el("li");
-    li.appendChild(el("span", "chain__node"));
-    li.appendChild(el("span", "chain__tag", "conclusion"));
-    li.appendChild(el("p", "chain__text", "conclusion reached independently · drift from your launch narrative: 0"));
-    ol.appendChild(li);
-  }
-
-  function buildEvidence() {
-    const wrap = $("#evidence");
-    EVIDENCE.forEach((e) => {
-      const row = el("div", "ev");
-      row.appendChild(el("span", "ev__src", e.src));
-      row.appendChild(el("span", "ev__txt", e.text));
-      wrap.appendChild(row);
+    const wrap = $("#chain");
+    CHAIN.forEach((c, i) => {
+      const item = el("div", "chain-item" + (i === CHAIN.length - 1 ? " is-end" : ""));
+      item.appendChild(el("span", "chain-tag", c.tag));
+      const p = el("p", "statement", c.text);
+      p.setAttribute("data-write", "");
+      item.appendChild(p);
+      wrap.appendChild(item);
     });
   }
 
-  function buildTrace() {
-    const wrap = $("#trace");
-    TIMELINE.forEach((t) => {
+  function buildRows(target, items, cls, map) {
+    const dl = $(target);
+    dl.classList.add(cls);
+    items.forEach((it) => {
       const row = el("div", "row");
-      const top = el("div", "trace__top");
-      top.appendChild(el("span", "trace__period mono", t.period));
-      top.appendChild(el("span", "trace__role", t.role));
-      row.appendChild(top);
-      row.appendChild(el("span", "trace__detail", t.detail));
-      wrap.appendChild(row);
-    });
-  }
-
-  function buildArtifacts() {
-    const wrap = $("#artifacts");
-    ARTIFACTS.forEach((a) => {
-      const row = el("div", "row");
-      const top = el("div", "artifacts__top");
-      top.appendChild(el("span", "artifacts__name", a.name));
-      top.appendChild(el("span", "tag", a.tag));
-      row.appendChild(top);
-      row.appendChild(el("span", "artifacts__detail", a.detail));
-      wrap.appendChild(row);
+      row.appendChild(el("dt", "row__key", map.key(it)));
+      row.appendChild(el("dd", "row__val", map.val(it)));
+      dl.appendChild(row);
     });
   }
 
   function buildMatch() {
     const wrap = $("#match");
     MATCH.forEach((m) => {
-      const row = el("div", "match__row");
-      row.appendChild(el("span", "match__pi", `<b>PI:</b> ${m.pi}`));
-      row.appendChild(el("span", "match__me", `<b>FIX:</b> ${m.me}`));
-      wrap.appendChild(row);
+      const pair = el("div", "pair");
+      pair.appendChild(el("p", "pi", `<b>PI</b> · ${m.pi}`));
+      const fix = el("p", "fix", `<b>FIX</b>${m.me}`);
+      fix.setAttribute("data-write", "");
+      pair.appendChild(fix);
+      wrap.appendChild(pair);
     });
   }
 
-  buildScan("#scanPi", PI_RECON);
-  buildScan("#scanMe", ME_SOURCES);
+  buildLog("#scanPi", PI_RECON);
+  buildLog("#scanMe", ME_SOURCES);
   buildChain();
-  buildEvidence();
-  buildTrace();
-  buildArtifacts();
+  buildRows("#evidence", EVIDENCE, "rows--crit", { key: (e) => e.src, val: (e) => e.text });
+  buildRows("#trace", TIMELINE, "rows--ok", { key: (t) => t.period, val: (t) => `${t.role}<small>${t.detail}</small>` });
+  buildRows("#artifacts", ARTIFACTS, "rows--ok", { key: (a) => a.tag, val: (a) => `${a.name}<small>${a.detail}</small>` });
   buildMatch();
 
-  /* ---------------- BOOT SEQUENCE ---------------- */
-  function runBoot(done) {
-    const boot = $("#boot");
-    const bar = $("#bootBar");
-    const pct = $("#bootPct");
-    const status = $("#bootStatus");
-    const stages = ["initializing", "loading recon kernel", "resolving target", "ready"];
-    if (reduced) {
-      boot.classList.add("is-done");
-      done();
-      return;
-    }
-    let p = 0;
-    const iv = setInterval(() => {
-      p = Math.min(100, p + Math.random() * 16 + 6);
-      bar.style.width = p + "%";
-      pct.textContent = Math.round(p) + "%";
-      status.textContent = stages[Math.min(stages.length - 1, Math.floor((p / 100) * stages.length))];
-      if (p >= 100) {
-        clearInterval(iv);
-        setTimeout(() => {
-          boot.classList.add("is-done");
-          done();
-        }, 260);
-      }
-    }, 130);
-  }
-
-  /* ---------------- HERO TITLE ---------------- */
-  function animateHero() {
-    if (reduced || typeof gsap === "undefined") {
-      document.querySelectorAll(".hero__title .word").forEach((w) => (w.style.transform = "none"));
-      document.querySelectorAll(".hero .reveal-up").forEach((n) => n.classList.add("is-revealed"));
-      return;
-    }
-    gsap.set(".hero__title .word", { yPercent: 110 });
-    gsap.to(".hero__title .word", {
-      yPercent: 0, duration: 1.05, ease: "power4.out", stagger: 0.08, delay: 0.1,
+  /* ---------------- SCROLL-WRITE HELPERS ---------------- */
+  function splitWords(node) {
+    const text = node.textContent;
+    node.textContent = "";
+    const frag = document.createDocumentFragment();
+    text.split(/(\s+)/).forEach((tok) => {
+      if (tok === "") return;
+      if (/^\s+$/.test(tok)) { frag.appendChild(document.createTextNode(tok)); return; }
+      const s = document.createElement("span");
+      s.className = "w";
+      s.textContent = tok;
+      frag.appendChild(s);
     });
-    document.querySelectorAll(".hero .reveal-up").forEach((n) => n.classList.add("is-revealed"));
-    gsap.fromTo(".hero .reveal-up",
-      { opacity: 0, y: 18 },
-      { opacity: 1, y: 0, duration: 0.9, ease: "power3.out", stagger: 0.1, delay: 0.45 }
-    );
+    node.appendChild(frag);
+    return node.querySelectorAll(".w");
   }
 
-  /* ---------------- SCROLL / GSAP ---------------- */
-  function initScroll() {
-    if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
-      document.querySelectorAll(".reveal-up").forEach((n) => n.classList.add("is-revealed"));
-      document.querySelectorAll(".scan li").forEach((n) => n.classList.add("is-in"));
+  /* ---------------- INIT ---------------- */
+  function init() {
+    const haveGsap = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
+
+    if (reduced || !haveGsap) {
+      // static, fully legible
+      document.querySelectorAll(".hero__title .word").forEach((w) => (w.style.transform = "none"));
+      document.querySelectorAll("[data-write]").forEach((n) => (n.style.color = "var(--ink)"));
+      document.querySelectorAll(".log li, #chain .chain-item, .rows .row, #match .pair, .plain li").forEach((n) => (n.style.opacity = 1));
       return;
     }
+
     gsap.registerPlugin(ScrollTrigger);
 
-    /* Lenis smooth scroll */
-    let lenis = null;
-    if (!reduced && typeof Lenis !== "undefined") {
-      lenis = new Lenis({ duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+    /* Lenis — snappy, not floaty */
+    if (typeof Lenis !== "undefined") {
+      const lenis = new Lenis({ lerp: 0.12, wheelMultiplier: 1 });
       lenis.on("scroll", ScrollTrigger.update);
-      gsap.ticker.add((time) => lenis.raf(time * 1000));
+      gsap.ticker.add((t) => lenis.raf(t * 1000));
       gsap.ticker.lagSmoothing(0);
     }
 
     /* progress rail */
     const railFill = $("#railFill");
-    ScrollTrigger.create({
-      start: 0, end: "max",
-      onUpdate: (self) => { railFill.style.width = (self.progress * 100).toFixed(2) + "%"; },
-    });
+    ScrollTrigger.create({ start: 0, end: "max", onUpdate: (self) => { railFill.style.width = (self.progress * 100).toFixed(2) + "%"; } });
 
-    /* generic reveals */
-    gsap.utils.toArray(".reveal-up").forEach((node) => {
-      if (node.closest(".hero")) return;
-      ScrollTrigger.create({
-        trigger: node, start: "top 86%", once: true,
-        onEnter: () => {
-          node.classList.add("is-revealed");
-          gsap.fromTo(node, { y: 22, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" });
-        },
+    /* HERO — instant, fast */
+    gsap.set(".hero__title .word", { yPercent: 110 });
+    gsap.to(".hero__title .word", { yPercent: 0, duration: 0.9, ease: "power4.out", stagger: 0.07, delay: 0.08 });
+    gsap.from(".hero__meta, .hero__sub, .hero__cue", { opacity: 0, y: 14, duration: 0.7, ease: "power3.out", stagger: 0.08, delay: 0.35 });
+
+    /* TEXT WRITES ON SCROLL — words fill ghost→ink, tied to scroll */
+    gsap.utils.toArray("[data-write]").forEach((node) => {
+      const words = splitWords(node);
+      gsap.to(words, {
+        color: "#EDEFF2",
+        ease: "none",
+        stagger: 0.5,
+        scrollTrigger: { trigger: node, start: "top 88%", end: "top 45%", scrub: 0.3 },
       });
     });
 
-    /* section heads — wipe in */
-    gsap.utils.toArray(".section__head").forEach((head) => {
-      gsap.from(head, {
-        scrollTrigger: { trigger: head, start: "top 88%", once: true },
-        y: 18, opacity: 0, duration: 0.7, ease: "power3.out",
-      });
-    });
-
-    /* terminal scan lines — staggered, "live scan" */
-    gsap.utils.toArray("[data-terminal]").forEach((term) => {
-      const lines = term.querySelectorAll(".scan li");
-      const sum = term.querySelector("[data-sum]");
-      gsap.set(sum, { opacity: 0 });
-      ScrollTrigger.create({
-        trigger: term, start: "top 78%", once: true,
-        onEnter: () => {
-          lines.forEach((li, i) => {
-            gsap.to(li, { opacity: li.classList.contains("div") ? 0.5 : 1, x: 0, duration: 0.4, delay: i * 0.12, ease: "power2.out", onStart: () => li.classList.add("is-in") });
-          });
-          gsap.to(sum, { opacity: 1, duration: 0.5, delay: lines.length * 0.12 + 0.2 });
-        },
-      });
-    });
-
-    /* chain nodes pop */
-    gsap.utils.toArray("#chain li").forEach((li, i) => {
-      gsap.from(li, {
-        scrollTrigger: { trigger: li, start: "top 88%", once: true },
-        x: -16, opacity: 0, duration: 0.6, ease: "power3.out", delay: (i % 2) * 0.05,
-      });
-    });
-
-    /* evidence / trace / artifact / match rows */
-    [".evidence .ev", ".trace .row", ".artifacts .row", ".match__row"].forEach((sel) => {
-      gsap.utils.toArray(sel).forEach((row) => {
-        gsap.from(row, {
-          scrollTrigger: { trigger: row, start: "top 90%", once: true },
-          y: 14, opacity: 0, duration: 0.55, ease: "power2.out",
+    /* log lines + rows + pairs — dim→bright, sequential with scroll */
+    const groups = [
+      { sel: ".log", child: "li" },
+      { sel: "#chain", child: ".chain-item" },
+      { sel: ".rows", child: ".row" },
+      { sel: "#match", child: ".pair" },
+    ];
+    groups.forEach(({ sel, child }) => {
+      gsap.utils.toArray(sel).forEach((container) => {
+        const kids = container.querySelectorAll(child);
+        if (!kids.length) return;
+        gsap.to(kids, {
+          opacity: 1,
+          ease: "none",
+          stagger: 0.5,
+          scrollTrigger: { trigger: container, start: "top 90%", end: "top 50%", scrub: 0.3 },
         });
       });
     });
 
-    /* finding name glitch */
-    const fname = $(".glitch");
-    if (fname) {
-      ScrollTrigger.create({
-        trigger: fname, start: "top 80%", once: true,
-        onEnter: () => { fname.classList.add("go"); setTimeout(() => fname.classList.remove("go"), 600); },
+    /* plain behaviors list — quick fade as it enters */
+    gsap.utils.toArray(".plain li").forEach((li) => {
+      gsap.fromTo(li, { opacity: 0.18, x: -8 }, {
+        opacity: 1, x: 0, duration: 0.5, ease: "power2.out",
+        scrollTrigger: { trigger: li, start: "top 88%", once: true },
       });
-    }
-
-    /* diff lines cascade */
-    gsap.from(".diff__line", {
-      scrollTrigger: { trigger: ".diff", start: "top 82%", once: true },
-      x: -10, opacity: 0, duration: 0.4, ease: "power2.out", stagger: 0.09,
     });
 
-    /* subtle parallax on cards */
-    gsap.utils.toArray(".finding, .asset, .cta").forEach((card) => {
-      gsap.fromTo(card, { y: 30 }, {
-        y: -30, ease: "none",
-        scrollTrigger: { trigger: card, start: "top bottom", end: "bottom top", scrub: 1 },
+    /* tags / kickers / summaries — snappy reveal */
+    gsap.utils.toArray(".tag, .kicker, .summary, .cmd, .note, .role, .cta-kicker, .diff, .actions, .footnote").forEach((node) => {
+      gsap.from(node, {
+        opacity: 0, y: 12, duration: 0.55, ease: "power2.out",
+        scrollTrigger: { trigger: node, start: "top 92%", once: true },
       });
     });
   }
@@ -314,32 +232,21 @@
   function initCursor() {
     if (reduced || window.matchMedia("(hover:none)").matches || typeof gsap === "undefined") return;
     const cursor = $("#cursor");
-    const xTo = gsap.quickTo(cursor, "x", { duration: 0.25, ease: "power3" });
-    const yTo = gsap.quickTo(cursor, "y", { duration: 0.25, ease: "power3" });
+    const xTo = gsap.quickTo(cursor, "x", { duration: 0.22, ease: "power3" });
+    const yTo = gsap.quickTo(cursor, "y", { duration: 0.22, ease: "power3" });
     window.addEventListener("mousemove", (e) => { xTo(e.clientX); yTo(e.clientY); });
-
     document.querySelectorAll("a, [data-magnetic]").forEach((node) => {
       node.addEventListener("mouseenter", () => cursor.classList.add("is-hover"));
       node.addEventListener("mouseleave", () => cursor.classList.remove("is-hover"));
     });
-
     document.querySelectorAll("[data-magnetic]").forEach((btn) => {
       btn.addEventListener("mousemove", (e) => {
         const r = btn.getBoundingClientRect();
-        const mx = e.clientX - r.left - r.width / 2;
-        const my = e.clientY - r.top - r.height / 2;
-        gsap.to(btn, { x: mx * 0.3, y: my * 0.4, duration: 0.4, ease: "power3" });
+        gsap.to(btn, { x: (e.clientX - r.left - r.width / 2) * 0.3, y: (e.clientY - r.top - r.height / 2) * 0.4, duration: 0.4, ease: "power3" });
       });
       btn.addEventListener("mouseleave", () => gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1,0.4)" }));
     });
   }
 
-  /* ---------------- INIT ---------------- */
-  window.addEventListener("DOMContentLoaded", () => {
-    initCursor();
-    runBoot(() => {
-      animateHero();
-      initScroll();
-    });
-  });
+  window.addEventListener("DOMContentLoaded", () => { init(); initCursor(); });
 })();

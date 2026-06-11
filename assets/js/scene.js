@@ -12,7 +12,7 @@ const sizes = { w: window.innerWidth, h: window.innerHeight };
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
 renderer.setSize(sizes.w, sizes.h);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
 
 const scene = new THREE.Scene();
 
@@ -49,7 +49,7 @@ float snoise(vec3 v){
 }`;
 
 // ---- core point cloud ----
-const coreGeo = new THREE.IcosahedronGeometry(1.55, 48);
+const coreGeo = new THREE.IcosahedronGeometry(1.55, 26);
 const coreMat = new THREE.ShaderMaterial({
   transparent: true,
   depthWrite: false,
@@ -113,7 +113,7 @@ ringB.rotation.y = Math.PI * 0.2;
 group.add(ringA, ringB);
 
 // ---- drifting field ----
-const FN = 480;
+const FN = 300;
 const fpos = new Float32Array(FN * 3);
 for (let i = 0; i < FN; i++) {
   const r = 4 + Math.random() * 8;
@@ -154,7 +154,7 @@ window.addEventListener("resize", () => {
   camera.aspect = sizes.w / sizes.h;
   camera.updateProjectionMatrix();
   renderer.setSize(sizes.w, sizes.h);
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
   coreMat.uniforms.uPx.value = renderer.getPixelRatio();
 });
 
