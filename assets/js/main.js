@@ -317,7 +317,7 @@
       img.setAttribute("aria-hidden", "true");
       svg.replaceWith(img);
     };
-    img.src = "assets/img/hero-art.png"; // 404 → keep SVG fallback
+    img.src = "assets/img/hero-art.webp"; // 404 → keep SVG fallback
   }
 
   /* ---------------- CROSSHAIR TRACKER ---------------- */
