@@ -230,6 +230,15 @@
   function init() {
     const haveGsap = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
 
+    /* reduced motion: no autoplaying video — show poster with controls */
+    if (reduced) {
+      document.querySelectorAll(".vid__player").forEach((v) => {
+        v.removeAttribute("autoplay");
+        v.controls = true;
+        v.pause && v.pause();
+      });
+    }
+
     if (reduced || !haveGsap) {
       // static, fully legible
       document.querySelectorAll(".t-line").forEach((l) => l.classList.add("live"));
@@ -300,7 +309,7 @@
     });
 
     /* section headers / kickers / summaries — snappy reveal */
-    gsap.utils.toArray(".sec-head, .kicker, .summary, .cmd, .note, .diff, .actions, .footnote").forEach((node) => {
+    gsap.utils.toArray(".sec-head, .kicker, .summary, .cmd, .note, .diff, .actions, .footnote, .vid").forEach((node) => {
       gsap.from(node, {
         opacity: 0, y: 12, duration: 0.55, ease: "power2.out",
         scrollTrigger: { trigger: node, start: "top 92%", once: true },
