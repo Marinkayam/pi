@@ -11,73 +11,73 @@
   /* ---------------- DATA ---------------- */
   const PI_RECON = [
     { divider: "pass 1 · surface" },
-    { name: "pi.security — one line, one pun", kind: "web",
+    { name: "pi.security · one line, one pun", kind: "web",
       intel: "entire public surface: one sentence and a pie pun. Operational discipline noted.",
       url: "https://pi.security" },
     { name: "press: geektime · calcalist · ynet · newswire", kind: "press",
       intel: "$35M seed+A · 23 employees · TLV + SF. Asked why not $31.4M: “we try not to make irrational decisions.”",
       url: "https://www.geektime.co.il/pi-security-funding/" },
-    { name: "linkedin.com/in/yoniramon — launch post", kind: "social",
+    { name: "linkedin.com/in/yoniramon · launch post", kind: "social",
       intel: "founding principle extracted: learn once, never pay for the same lesson twice.",
       url: "https://www.linkedin.com/in/yoniramon" },
-    { name: "W. Isaacson, “Elon Musk” — Y.R., Twitter takeover", kind: "book",
+    { name: "W. Isaacson, “Elon Musk” · Y.R., Twitter takeover", kind: "book",
       intel: "10+ years securing Tesla; appears in the biography securing Twitter during the takeover." },
     { divider: "pass 2 · network" },
-    { name: "Brightmind Partners — fund DNA, portfolio graph", kind: "vc",
+    { name: "Brightmind Partners · fund DNA, portfolio graph", kind: "vc",
       intel: "operator-led fund; partners ex-Armis, Tanium, Exabeam. Deep technical diligence is the brand." },
-    { name: "S. Ward — feed history, 30 days back", kind: "vc",
-      intel: "30 days pre-wire, quoting Glasswing: verify, disclose, patch — three bottlenecks, not one." },
-    { name: "Third Point · Kurtz · Armis founders — backer map", kind: "vc",
+    { name: "S. Ward · feed history, 30 days back", kind: "vc",
+      intel: "30 days pre-wire, quoting Glasswing: verify, disclose, patch: three bottlenecks, not one." },
+    { name: "Third Point · Kurtz · Armis founders · backer map", kind: "vc",
       intel: "CrowdStrike’s CEO and Armis’ founders backing remediation. Insiders betting against their own dashboards." },
     { name: "same-day round detected: Aryon (also Brightmind)", kind: "vc",
       intel: "two security rounds, one fund, one day (June 10). Brightmind is consolidating the category." },
     { divider: "pass 3 · thesis" },
-    { name: "Anthropic — Project Glasswing, first update", kind: "ai",
+    { name: "Anthropic · Project Glasswing, first update", kind: "ai",
       intel: "10,000+ critical vulnerabilities in month one. 530 disclosed. 75 patched. The bottleneck moved.",
       url: "https://www.anthropic.com/research/glasswing-initial-update" },
     { name: "Claude-Mythos references across launch coverage", kind: "ai",
-      intel: "Pi builds on Mythos-class models. So does this candidate — daily, with authored agent skills.",
+      intel: "Pi builds on Mythos-class models. So does this candidate, daily, with authored agent skills.",
       url: "https://www.anthropic.com/news/expanding-project-glasswing" },
-    { name: "3 namesakes found (cameras, guards, robots) — disambiguated", kind: "meta", amber: true,
+    { name: "3 namesakes found (cameras, guards, robots) · disambiguated", kind: "meta", amber: true,
       intel: "noise removed: a CCTV vendor, a guard service, a robotics firm. Locked on the right Pi." },
   ];
 
   const ME_SOURCES = [
     { name: "marinka.me", kind: "web",
-      intel: "shipped AI products recovered: Claude Vision PWA, API content studio, ops-automation builder — designed, coded, deployed solo. fix vector: zero handoff tax between design and production.",
+      intel: "shipped AI products recovered: Claude Vision PWA, API content studio, ops-automation builder. Designed, coded, deployed solo. fix vector: zero handoff tax between design and production.",
       url: "https://marinka.me" },
-    { name: "npm — @monto/ui-v2", kind: "npm",
-      intel: "design system built from zero, published as code: 200+ React components live in production. fix vector: the pattern is designed once, encoded once — the violation can’t recur.",
+    { name: "npm · @monto/ui-v2", kind: "npm",
+      intel: "design system built from zero, published as code: 200+ React components live in production. fix vector: the pattern is designed once, encoded once. The violation can’t recur.",
       url: "https://www.npmjs.com/package/@monto/ui-v2" },
-    { name: "monto.io — two production platforms", kind: "work",
-      intel: "sole designer on B2B fintech platforms moving real money: approvals, exceptions, trust surfaces. ~860 violations fixed at the system level. fix vector: remediation at the root, not the symptom — Pi’s founding principle, applied to design.",
+    { name: "monto.io · two production platforms", kind: "work",
+      intel: "sole designer on B2B fintech platforms moving real money: approvals, exceptions, trust surfaces. ~860 violations fixed at the system level. fix vector: remediation at the root, not the symptom. Pi’s founding principle, applied to design.",
       url: "https://monto.io" },
-    { name: "linkedin.com — AI-design writing", kind: "social",
+    { name: "linkedin.com · AI-design writing", kind: "social",
       intel: "public record of design governance encoded as agent context: AI ships on-system UI, unsupervised. fix vector: the exact discipline an autonomous platform needs to earn human trust." },
-    { name: "College of Management — GenAI course", kind: "edu",
-      intel: "teaches Generative AI to ~200 students/year. fix vector: translating machine reasoning for humans is the day job — that is the unowned surface at Pi." },
+    { name: "College of Management · GenAI course", kind: "edu",
+      intel: "teaches Generative AI to ~200 students/year. fix vector: translating machine reasoning for humans is the day job. That is the unowned surface at Pi." },
     { name: "shipped side projects", kind: "lab",
-      intel: "builds the tool instead of writing the ticket; leads a competitive acrobatics team — risk appetite calibrated. fix vector: ships at machine speed on Pi’s own stack, Claude-Mythos, daily." },
+      intel: "builds the tool instead of writing the ticket; leads a competitive acrobatics team. Risk appetite calibrated. fix vector: ships at machine speed on Pi’s own stack, Claude-Mythos, daily." },
   ];
 
   const CHAIN = [
     { tag: "glasswing", text: "Anthropic’s Glasswing: 10,000+ critical vulnerabilities found in one month. 530 disclosed. The internet patched 75." },
     { tag: "your lead investor", text: "Ward, 30 days before wiring $35M: verify, disclose, patch. Three bottlenecks, not one." },
     { tag: "deduction", text: "Offense now scales at machine speed. The only defense left is remediation velocity. Pi exists to collapse bottleneck #3." },
-    { tag: "convergence", text: "Pi runs on Claude-Mythos. The candidate builds with the same models daily — design governance as agent context. Same stack. Different surface." },
+    { tag: "convergence", text: "Pi runs on Claude-Mythos. The candidate builds with the same models daily. Design governance as agent context. Same stack. Different surface." },
   ];
 
   const EVIDENCE = [
     { src: "headcount", text: "23 employees, Tel Aviv + San Francisco. Designers: 0." },
     { src: "founding principle", text: "Learn once. Never pay for the same lesson twice." },
-    { src: "product", text: "Context is the moat — yet the surface where humans trust an autonomous fix has no owner." },
+    { src: "product", text: "Context is the moat, yet the surface where humans trust an autonomous fix has no owner." },
     { src: "customers", text: "A leading AI lab and cybersecurity firms. Maximum design literacy, minimum patience." },
   ];
 
   const TIMELINE = [
-    { period: "now", role: "Principal Product Designer — Monto, B2B fintech", detail: "Sole designer. Two production platforms. Owns the design system end to end." },
-    { period: "ongoing", role: "Lecturer, Generative AI — College of Management", detail: "~200 students/year." },
-    { period: "origin", role: "Global Art Direction — Moog.it", detail: "Lancôme, Guinness, Stella Artois." },
+    { period: "now", role: "Principal Product Designer · Monto, B2B fintech", detail: "Sole designer. Two production platforms. Owns the design system end to end." },
+    { period: "ongoing", role: "Lecturer, Generative AI · College of Management", detail: "~200 students/year." },
+    { period: "origin", role: "Global Art Direction · Moog.it", detail: "Lancôme, Guinness, Stella Artois." },
   ];
 
   const ARTIFACTS = [
@@ -90,7 +90,7 @@
   const MATCH = [
     { pi: "Context separates signal from noise", me: "Three recon passes before the first pixel of this page" },
     { pi: "Learn once, never pay twice", me: "Fix the pattern, publish the package, make the violation impossible" },
-    { pi: "Autonomous fixes need human trust", me: "Years designing trust surfaces in fintech — approvals, exceptions, money on the line" },
+    { pi: "Autonomous fixes need human trust", me: "Years designing trust surfaces in fintech: approvals, exceptions, money on the line" },
     { pi: "Ship at machine speed", me: "Figma to production component with Claude Code. No handoff tax" },
   ];
 
@@ -103,7 +103,7 @@
   };
 
   /* line icons (stroke = currentColor) — drawn in on reveal, idle motion after */
-  const I = (p, motion) => `<svg class="${motion || ""}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  const I = (p, motion) => `<svg class="${motion || ""}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
   const ICONS = {
     users: I('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M19 20c0-2.4-1-3.8-2.5-4.6"/>', "i-pulse"),
     book: I('<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 17h13"/><path d="M9 8h6M9 11.5h4"/>', "i-pulse"),
