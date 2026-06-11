@@ -181,16 +181,16 @@ main{ position:relative; z-index:10; }
     radial-gradient(70% 50% at 50% -6%, rgba(120,108,230,.16), transparent 60%),
     linear-gradient(180deg, #E9E7FA, #EFEEFB);
 }
-/* video band — ground matched to the clip's icy backdrop (#CDDDEC) */
+/* video band — keyed clip sits on white; multiply melts its background */
 .block--vid{
-  background:linear-gradient(180deg, #DCE7F1, #CDDDEC 30%, #CDDDEC 78%, #DCE7F1);
+  background:
+    radial-gradient(60% 40% at 50% 0%, rgba(43,200,196,.06), transparent 60%),
+    linear-gradient(180deg, #FFFFFF, #F4FAFC);
 }
-.vid{ max-width:880px; margin:0 auto clamp(36px,6vw,60px); }
+.vid{ max-width:840px; margin:0 auto clamp(36px,6vw,60px); }
 .vid__player{
   display:block; width:100%; height:auto;
-  /* feather the rectangle into the matching background */
-  -webkit-mask-image:radial-gradient(115% 105% at 50% 50%, #000 62%, transparent 97%);
-          mask-image:radial-gradient(115% 105% at 50% 50%, #000 62%, transparent 97%);
+  mix-blend-mode:multiply;   /* white background of the clip disappears */
 }
 .wrap{ max-width:1080px; margin:0 auto; }
 
