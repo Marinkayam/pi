@@ -179,7 +179,7 @@
     gsap.utils.toArray("[data-write]").forEach((node) => {
       const words = splitWords(node);
       gsap.to(words, {
-        color: "#EDEFF2",
+        color: "#0E1411",
         ease: "none",
         stagger: 0.5,
         scrollTrigger: { trigger: node, start: "top 88%", end: "top 45%", scrub: 0.3 },
