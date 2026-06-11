@@ -191,6 +191,9 @@ main{ position:relative; z-index:10; }
 .vid__player{
   display:block; width:100%; height:auto;
   mix-blend-mode:multiply;   /* white background of the clip disappears */
+  /* belt & suspenders: feather the frame edge as well */
+  -webkit-mask-image:radial-gradient(120% 110% at 50% 50%, #000 70%, transparent 99%);
+          mask-image:radial-gradient(120% 110% at 50% 50%, #000 70%, transparent 99%);
 }
 .wrap{ max-width:1080px; margin:0 auto; }
 
