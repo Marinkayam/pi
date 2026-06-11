@@ -339,6 +339,20 @@ main{ position:relative; z-index:10; }
 }
 @keyframes cue{ 0%,100%{ width:18px; opacity:.4; } 50%{ width:40px; opacity:1; } }
 
+/* hand-drawn winter scene */
+.hero__art{
+  position:absolute; z-index:1; pointer-events:none;
+  right:clamp(0px,5vw,72px); bottom:96px;
+  width:min(56vw,620px); height:auto;
+  animation:float 7s ease-in-out infinite;
+}
+@keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
+.il-trail{ animation:trail 2.6s linear infinite; }
+@keyframes trail{ to{ stroke-dashoffset:-36; } }
+@media (max-width:760px){
+  .hero__art{ width:78vw; right:-4vw; bottom:88px; opacity:.92; }
+}
+
 /* cursor-tracking crosshair + coordinates */
 .xhair{ position:absolute; inset:0; z-index:1; pointer-events:none; opacity:0; transition:opacity .4s ease; }
 .hero:hover .xhair{ opacity:1; }

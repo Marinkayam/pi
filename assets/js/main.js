@@ -266,6 +266,7 @@
     const lines = document.querySelectorAll(".t-line");
     lines.forEach((line, i) => decodeLine(line, 60 + i * 160));
     gsap.from(".hero__meta, .hero__sub, .hero__cue, .ticker", { opacity: 0, y: 12, duration: 0.7, ease: "power3.out", stagger: 0.09, delay: 0.4 });
+    gsap.from(".hero__art", { opacity: 0, duration: 1.1, ease: "power2.out", delay: 0.55 });
 
     /* hero drifts away as you scroll into the report */
     gsap.to(".hero__inner", {
