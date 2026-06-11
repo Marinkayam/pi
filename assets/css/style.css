@@ -158,6 +158,10 @@ body::before{
   background:var(--mint);
   border-bottom:1px solid rgba(22,32,58,.06);
 }
+.topbar__c{
+  position:absolute; left:50%; transform:translateX(-50%);
+  white-space:nowrap; color:var(--ink); font-weight:600;
+}
 .topbar__r{ text-align:right; }
 
 /* ---------- Layout — full-bleed alternating bands ---------- */
@@ -263,6 +267,27 @@ main{ position:relative; z-index:10; }
 .log .src b{ color:var(--ink-dim); font-weight:400; }
 .log .stat{ flex-shrink:0; color:var(--teal-deep); }
 .log li.amber .stat{ color:var(--amber); }
+
+/* expandable intel rows — collapsed state is visually identical */
+.log li.expandable{ display:block; padding:0; cursor:pointer; outline:none; }
+.log li.expandable .log__row{
+  display:flex; justify-content:space-between; gap:16px; align-items:baseline;
+  min-height:30px; padding:9px 0;
+}
+.log li.expandable:focus-visible .log__row{ box-shadow:inset 2px 0 0 var(--teal); padding-left:8px; }
+.log__right{ display:inline-flex; gap:12px; align-items:baseline; flex-shrink:0; }
+.log__tog{ color:var(--ink-dim); transition:transform .3s var(--ease), color .3s; display:inline-block; width:1ch; text-align:center; }
+.log li.is-open .log__tog{ transform:rotate(45deg); color:var(--teal-deep); }
+.log__intel{ max-height:0; overflow:hidden; transition:max-height .35s var(--ease); }
+.log li.is-open .log__intel{ max-height:300px; }
+.log__intel-in{
+  padding:2px 0 12px; font-size:12px; line-height:1.65; color:var(--ink-soft);
+}
+.log__source{
+  color:var(--teal-deep); text-decoration:none; white-space:nowrap;
+  border-bottom:1px solid rgba(20,156,153,.35);
+}
+.log__source:hover{ color:var(--teal); }
 .summary{ font-family:var(--mono); font-size:13px; color:var(--teal-deep); margin:24px 0 0; }
 .summary--ok{ color:var(--teal-deep); }
 
@@ -491,7 +516,8 @@ main{ position:relative; z-index:10; }
 @media (max-width:640px){
   body{ font-size:15px; }
   .topbar{ letter-spacing:.1em; }
-  .topbar__l{ max-width:50vw; }
+  .topbar__l{ max-width:40vw; }
+  .topbar__c{ display:none; }
   .rows .row{ grid-template-columns:1fr; gap:6px; }
   .row__key{ font-size:11px; }
   .statement, .cta-lead{ max-width:none; }
@@ -506,5 +532,7 @@ main{ position:relative; z-index:10; }
   .js .t-line{ opacity:1; }
   .w{ color:inherit; }
   .js .log li, .js #chain .chain-item, .js .rows .row, .js .plain li, .js .card{ opacity:1; transform:none; }
+  .log__intel{ transition:none; }
+  .log li.is-open .log__tog{ transition:none; }
   .grain, .xhair, .ticker{ display:none; }
 }

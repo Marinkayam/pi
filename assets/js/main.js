@@ -11,28 +11,44 @@
   /* ---------------- DATA ---------------- */
   const PI_RECON = [
     { divider: "pass 1 · surface" },
-    { name: "pi.security — one line, one pun", kind: "web" },
-    { name: "press: geektime · calcalist · ynet · newswire", kind: "press" },
-    { name: "linkedin.com/in/yoniramon — launch post", kind: "social" },
-    { name: "W. Isaacson, “Elon Musk” — Y.R., Twitter takeover", kind: "book" },
+    { name: "pi.security — one line, one pun", kind: "web",
+      intel: "entire public surface: one sentence and a pie pun. Operational discipline noted.",
+      url: "https://pi.security" },
+    { name: "press: geektime · calcalist · ynet · newswire", kind: "press",
+      intel: "$35M seed+A · 23 employees · TLV + SF. Asked why not $31.4M: “we try not to make irrational decisions.”",
+      url: "https://www.geektime.co.il/pi-security-funding/" },
+    { name: "linkedin.com/in/yoniramon — launch post", kind: "social",
+      intel: "founding principle extracted: learn once, never pay for the same lesson twice.",
+      url: "https://www.linkedin.com/in/yoniramon" },
+    { name: "W. Isaacson, “Elon Musk” — Y.R., Twitter takeover", kind: "book",
+      intel: "10+ years securing Tesla; appears in the biography securing Twitter during the takeover." },
     { divider: "pass 2 · network" },
-    { name: "Brightmind Partners — fund DNA, portfolio graph", kind: "vc" },
-    { name: "S. Ward — feed history, 30 days back", kind: "vc" },
-    { name: "Third Point · Kurtz · Armis founders — backer map", kind: "vc" },
-    { name: "same-day round detected: Aryon (also Brightmind)", kind: "vc" },
+    { name: "Brightmind Partners — fund DNA, portfolio graph", kind: "vc",
+      intel: "operator-led fund; partners ex-Armis, Tanium, Exabeam. Deep technical diligence is the brand." },
+    { name: "S. Ward — feed history, 30 days back", kind: "vc",
+      intel: "30 days pre-wire, quoting Glasswing: verify, disclose, patch — three bottlenecks, not one." },
+    { name: "Third Point · Kurtz · Armis founders — backer map", kind: "vc",
+      intel: "CrowdStrike’s CEO and Armis’ founders backing remediation. Insiders betting against their own dashboards." },
+    { name: "same-day round detected: Aryon (also Brightmind)", kind: "vc",
+      intel: "two security rounds, one fund, one day (June 10). Brightmind is consolidating the category." },
     { divider: "pass 3 · thesis" },
-    { name: "Anthropic — Project Glasswing, first update", kind: "ai" },
-    { name: "Claude-Mythos references across launch coverage", kind: "ai" },
-    { name: "3 namesakes found (cameras, guards, robots) — disambiguated", kind: "meta", amber: true },
+    { name: "Anthropic — Project Glasswing, first update", kind: "ai",
+      intel: "10,000+ critical vulnerabilities in month one. 530 disclosed. 75 patched. The bottleneck moved.",
+      url: "https://www.anthropic.com/research/glasswing-initial-update" },
+    { name: "Claude-Mythos references across launch coverage", kind: "ai",
+      intel: "Pi builds on Mythos-class models. So does this candidate — daily, with authored agent skills.",
+      url: "https://www.anthropic.com/news/expanding-project-glasswing" },
+    { name: "3 namesakes found (cameras, guards, robots) — disambiguated", kind: "meta", amber: true,
+      intel: "noise removed: a CCTV vendor, a guard service, a robotics firm. Locked on the right Pi." },
   ];
 
   const ME_SOURCES = [
-    { name: "marinka.me", kind: "web" },
-    { name: "npm — @monto/ui-v2", kind: "npm" },
-    { name: "monto.io — two production platforms", kind: "work" },
-    { name: "linkedin.com — AI-design writing", kind: "social" },
-    { name: "College of Management — GenAI course", kind: "edu" },
-    { name: "shipped side projects", kind: "lab" },
+    { name: "marinka.me", kind: "web", intel: "" },
+    { name: "npm — @monto/ui-v2", kind: "npm", intel: "" },
+    { name: "monto.io — two production platforms", kind: "work", intel: "" },
+    { name: "linkedin.com — AI-design writing", kind: "social", intel: "" },
+    { name: "College of Management — GenAI course", kind: "edu", intel: "" },
+    { name: "shipped side projects", kind: "lab", intel: "" },
   ];
 
   const CHAIN = [
@@ -96,8 +112,46 @@
     items.forEach((it) => {
       if (it.divider) { ul.appendChild(el("li", "div", `── ${it.divider}`)); return; }
       const li = el("li", it.amber ? "amber" : "");
-      li.appendChild(el("span", "src", `<b>[${it.kind}]</b> ${it.name}`));
-      li.appendChild(el("span", "stat", it.amber ? "✓ resolved" : "✓ indexed"));
+      const expandable = it.intel !== undefined;
+
+      const row = el("div", "log__row");
+      row.appendChild(el("span", "src", `<b>[${it.kind}]</b> ${it.name}`));
+      const right = el("span", "log__right");
+      right.appendChild(el("span", "stat", it.amber ? "✓ resolved" : "✓ indexed"));
+      if (expandable) right.appendChild(el("span", "log__tog", "+"));
+      row.appendChild(right);
+      li.appendChild(row);
+
+      if (expandable) {
+        li.classList.add("expandable");
+        li.setAttribute("role", "button");
+        li.setAttribute("tabindex", "0");
+        li.setAttribute("aria-expanded", "false");
+
+        const intel = el("div", "log__intel");
+        const inner = el("div", "log__intel-in");
+        inner.appendChild(document.createTextNode(`⤷ ${it.intel || "—"}`));
+        if (it.url) {
+          inner.appendChild(document.createTextNode(" "));
+          const a = el("a", "log__source", "[source ↗]");
+          a.href = it.url;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.addEventListener("click", (e) => e.stopPropagation());
+          inner.appendChild(a);
+        }
+        intel.appendChild(inner);
+        li.appendChild(intel);
+
+        const toggle = () => {
+          const open = li.classList.toggle("is-open");
+          li.setAttribute("aria-expanded", open ? "true" : "false");
+        };
+        li.addEventListener("click", toggle);
+        li.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
+        });
+      }
       ul.appendChild(li);
     });
   }
