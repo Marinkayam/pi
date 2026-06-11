@@ -306,6 +306,20 @@
     });
   }
 
+  /* ---------------- PAINTED HERO ART (swaps in when the asset exists) ---------------- */
+  function initHeroArt() {
+    const svg = document.querySelector("svg.hero__art");
+    if (!svg) return;
+    const img = new Image();
+    img.onload = () => {
+      img.className = "hero__art hero__art--painted";
+      img.alt = "";
+      img.setAttribute("aria-hidden", "true");
+      svg.replaceWith(img);
+    };
+    img.src = "assets/img/hero-art.png"; // 404 → keep SVG fallback
+  }
+
   /* ---------------- CROSSHAIR TRACKER ---------------- */
   function initXhair() {
     const hero = $("#hero");
@@ -398,6 +412,7 @@
     init();
     initCursor();
     initXhair();
+    initHeroArt();
     runBoot(playHero);
   });
 })();

@@ -406,6 +406,8 @@ main{ position:relative; z-index:10; }
   animation:float 7s ease-in-out infinite;
 }
 @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
+/* painted raster version: multiply blends its white ground into the icy washes */
+.hero__art--painted{ mix-blend-mode:multiply; }
 .il-trail{ animation:trail 2.6s linear infinite; }
 @keyframes trail{ to{ stroke-dashoffset:-36; } }
 @media (max-width:760px){
