@@ -37,9 +37,9 @@
 
   const CHAIN = [
     { tag: "glasswing", text: "Anthropic’s Glasswing: 10,000+ critical vulnerabilities found in one month. 530 disclosed. The internet patched 75." },
-    { tag: "your lead investor", text: "Ward, 30 days before wiring you $35M: no one can hire their way out of that backlog. Verify, disclose, patch — three bottlenecks, not one." },
+    { tag: "your lead investor", text: "Ward, 30 days before wiring $35M: verify, disclose, patch. Three bottlenecks, not one." },
     { tag: "deduction", text: "Offense now scales at machine speed. The only defense left is remediation velocity. Pi exists to collapse bottleneck #3." },
-    { tag: "convergence", text: "Pi runs on Claude-Mythos. I build with the same models daily — design governance encoded as agent context. Same stack. Different surface. Same thesis." },
+    { tag: "convergence", text: "Pi runs on Claude-Mythos. The candidate builds with the same models daily — design governance as agent context. Same stack. Different surface." },
   ];
 
   const EVIDENCE = [
