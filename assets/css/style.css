@@ -430,7 +430,7 @@ main{ position:relative; z-index:10; }
 .hero__art{
   position:absolute; z-index:1; pointer-events:none;
   right:clamp(-40px,0vw,32px);
-  top:clamp(40px,7vh,96px); bottom:auto;
+  top:clamp(80px,12vh,160px); bottom:auto;
   width:min(64vw,820px); height:auto;
   animation:float 7s ease-in-out infinite;
 }

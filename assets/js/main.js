@@ -388,9 +388,9 @@
         pct.textContent = "100%";
         boot.classList.add("locked");
         status.textContent = "ACCESS GRANTED";
-        setTimeout(finish, 520);
+        setTimeout(finish, 950);
       }
-    }, 130);
+    }, 195);
   }
 
   /* ---------------- CURSOR + MAGNETIC ---------------- */
