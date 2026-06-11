@@ -139,7 +139,7 @@
 
         const intel = el("div", "log__intel");
         const inner = el("div", "log__intel-in");
-        inner.appendChild(document.createTextNode(`⤷ ${it.intel || "—"}`));
+        inner.appendChild(document.createTextNode(`⤷ ${it.intel || "no public trace"}`));
         if (it.url) {
           inner.appendChild(document.createTextNode(" "));
           const a = el("a", "log__source", "[source ↗]");
