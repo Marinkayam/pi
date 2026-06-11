@@ -77,6 +77,19 @@
     return n;
   };
 
+  /* line icons (stroke = currentColor) */
+  const I = (p) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${p}</svg>`;
+  const ICONS = {
+    users: I('<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M16 6a3 3 0 0 1 0 5.6"/><path d="M19 20c0-2.4-1-3.8-2.5-4.6"/>'),
+    book: I('<path d="M5 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 17h13"/><path d="M9 8h6"/>'),
+    layers: I('<path d="M12 3 21 8l-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>'),
+    shield: I('<path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>'),
+    package: I('<path d="M12 3 21 8v8l-9 5-9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/>'),
+    wrench: I('<path d="M15 7a4 4 0 0 1-5.2 5.2L5 17l2 2 4.8-4.8A4 4 0 0 0 17 9z"/>'),
+    cpu: I('<rect x="7" y="7" width="10" height="10" rx="2"/><path d="M10 3v3M14 3v3M10 18v3M14 18v3M3 10h3M3 14h3M18 10h3M18 14h3"/>'),
+    rocket: I('<path d="M5 15c-1 2-1 4-1 4s2 0 4-1"/><path d="M9 15l-3-3c1-6 5-9 12-9 0 7-3 11-9 12z"/><circle cx="14" cy="10" r="1.6"/>'),
+  };
+
   /* ---------------- BUILD DOM ---------------- */
   function buildLog(target, items) {
     const ul = $(target);
@@ -112,24 +125,34 @@
     });
   }
 
+  function buildCards(target, items, opts) {
+    const wrap = $(target);
+    items.forEach((it, i) => {
+      const card = el("article", "card" + (opts.crit ? " card--crit" : ""));
+      card.appendChild(el("div", "card__icon", ICONS[opts.icons[i % opts.icons.length]]));
+      if (opts.label) card.appendChild(el("p", "card__label", opts.label(it)));
+      card.appendChild(el("h3", "card__title", opts.title(it)));
+      card.appendChild(el("p", "card__body", opts.body(it)));
+      wrap.appendChild(card);
+    });
+  }
+
   function buildMatch() {
     const wrap = $("#match");
     MATCH.forEach((m) => {
-      const pair = el("div", "pair");
-      pair.appendChild(el("p", "pi", `<b>PI</b> · ${m.pi}`));
-      const fix = el("p", "fix", `<b>FIX</b>${m.me}`);
-      fix.setAttribute("data-write", "");
-      pair.appendChild(fix);
-      wrap.appendChild(pair);
+      const card = el("article", "card card--match");
+      card.appendChild(el("p", "card__pi", `PI · ${m.pi}`));
+      card.appendChild(el("p", "card__fix", m.me));
+      wrap.appendChild(card);
     });
   }
 
   buildLog("#scanPi", PI_RECON);
   buildLog("#scanMe", ME_SOURCES);
   buildChain();
-  buildRows("#evidence", EVIDENCE, "rows--crit", { key: (e) => e.src, val: (e) => e.text });
+  buildCards("#evidence", EVIDENCE, { crit: true, icons: ["users", "book", "layers", "shield"], title: (e) => e.src, body: (e) => e.text });
   buildRows("#trace", TIMELINE, "rows--ok", { key: (t) => t.period, val: (t) => `${t.role}<small>${t.detail}</small>` });
-  buildRows("#artifacts", ARTIFACTS, "rows--ok", { key: (a) => a.tag, val: (a) => `${a.name}<small>${a.detail}</small>` });
+  buildCards("#artifacts", ARTIFACTS, { icons: ["package", "wrench", "cpu", "rocket"], label: (a) => a.tag, title: (a) => a.name, body: (a) => a.detail });
   buildMatch();
 
   /* ---------------- SCROLL-WRITE HELPERS ---------------- */
@@ -157,7 +180,8 @@
       // static, fully legible
       document.querySelectorAll(".t-line").forEach((l) => l.classList.add("live"));
       document.querySelectorAll("[data-write]").forEach((n) => (n.style.color = "var(--ink)"));
-      document.querySelectorAll(".log li, #chain .chain-item, .rows .row, #match .pair, .plain li").forEach((n) => (n.style.opacity = 1));
+      document.querySelectorAll(".log li, #chain .chain-item, .rows .row, .plain li").forEach((n) => (n.style.opacity = 1));
+      document.querySelectorAll(".card").forEach((n) => { n.style.opacity = 1; n.style.transform = "none"; });
       return;
     }
 
@@ -191,7 +215,6 @@
       { sel: ".log", child: "li" },
       { sel: "#chain", child: ".chain-item" },
       { sel: ".rows", child: ".row" },
-      { sel: "#match", child: ".pair" },
     ];
     groups.forEach(({ sel, child }) => {
       gsap.utils.toArray(sel).forEach((container) => {
@@ -214,8 +237,16 @@
       });
     });
 
-    /* tags / kickers / summaries — snappy reveal */
-    gsap.utils.toArray(".tag, .kicker, .summary, .cmd, .note, .role, .cta-kicker, .diff, .actions, .footnote").forEach((node) => {
+    /* cards — staggered rise per row */
+    gsap.utils.toArray(".cards").forEach((grid) => {
+      gsap.to(grid.querySelectorAll(".card"), {
+        opacity: 1, y: 0, duration: 0.6, ease: "power3.out", stagger: 0.1,
+        scrollTrigger: { trigger: grid, start: "top 85%", once: true },
+      });
+    });
+
+    /* section headers / kickers / summaries — snappy reveal */
+    gsap.utils.toArray(".sec-head, .kicker, .summary, .cmd, .note, .diff, .actions, .footnote").forEach((node) => {
       gsap.from(node, {
         opacity: 0, y: 12, duration: 0.55, ease: "power2.out",
         scrollTrigger: { trigger: node, start: "top 92%", once: true },

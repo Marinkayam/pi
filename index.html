@@ -173,83 +173,122 @@
     </section>
 
     <!-- ░░ §01 RECON ░░ -->
-    <section class="block" id="s01">
-      <p class="tag">§01 — Reconnaissance · Pi Security</p>
-      <p class="cmd">$ pi-recon --target pi.security --passes 3</p>
-      <ul class="log" id="scanPi"></ul>
-      <p class="summary">3 passes · target locked · signal isolated</p>
+    <section class="block block--white" id="s01">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="eyebrow">§01 · Reconnaissance</p>
+          <h2 class="display">We scanned Pi.<br><span class="accent">Three passes deep.</span></h2>
+        </header>
+        <div class="sec-body">
+          <p class="cmd">$ pi-recon --target pi.security --passes 3</p>
+          <ul class="log" id="scanPi"></ul>
+          <p class="summary">3 passes · target locked · signal isolated</p>
+        </div>
+      </div>
     </section>
 
     <!-- ░░ §02 SIGNAL CHAIN ░░ -->
-    <section class="block" id="s02">
-      <p class="tag">§02 — Signal chain · why Pi exists</p>
-      <div id="chain"></div>
-      <p class="note">conclusion reached independently · drift from your launch narrative: 0</p>
-      <p class="note">AUDIENCE CALIBRATION · backers profiled: ex-Secret Service, Home Depot CISO, Armis, Tanium, CrowdStrike. Operator-led. Allergic to decks. Zero slides, one pun.</p>
+    <section class="block block--ice" id="s02">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="eyebrow">§02 · Why Pi exists</p>
+          <h2 class="display">No one hires their way<br><span class="accent">out of the backlog.</span></h2>
+        </header>
+        <div class="sec-body">
+          <div id="chain"></div>
+          <p class="note">conclusion reached independently · drift from your launch narrative: 0</p>
+          <p class="note">AUDIENCE CALIBRATION · backers profiled: ex-Secret Service, Home Depot CISO, Armis, Tanium, CrowdStrike. Operator-led. Allergic to decks. Zero slides, one pun.</p>
+        </div>
+      </div>
     </section>
 
     <!-- ░░ §03 FINDING ░░ -->
-    <section class="block" id="s03">
-      <p class="tag tag--crit">§03 — Finding · PI-2026-0314 · CRITICAL · 9.8</p>
-      <h2 class="huge huge--crit" data-write>DesignFunctionNotFound</h2>
-      <p class="statement" data-write>An autonomous platform earns trust or loses it in the interface. That surface is currently unowned. Exploitable by any competitor with taste.</p>
-      <p class="kicker">Evidence</p>
-      <dl class="rows" id="evidence"></dl>
+    <section class="block block--lav" id="s03">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="eyebrow eyebrow--crit">Critical finding · 9.8</p>
+          <h2 class="display">DesignFunctionNotFound<span class="t-dot">.</span></h2>
+          <p class="lede">An autonomous platform earns trust or loses it in the interface. That surface is currently unowned — exploitable by any competitor with taste. <span class="accent-script">(We checked.)</span></p>
+        </header>
+        <div class="cards cards--4" id="evidence"></div>
+      </div>
     </section>
 
     <!-- ░░ §04 COUNTER-SCAN ░░ -->
-    <section class="block" id="s04">
-      <p class="tag tag--ok">§04 — Counter-scan · the fix</p>
-      <p class="cmd">$ pi-recon --target marinai --depth full</p>
-      <ul class="log" id="scanMe"></ul>
-      <p class="summary summary--ok">6 sources · classification: design-engineer hybrid · rarity: HIGH</p>
+    <section class="block block--white" id="s04">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="eyebrow eyebrow--ok">§04 · The fix</p>
+          <h2 class="display">Then we scanned<br><span class="accent">the fix.</span></h2>
+        </header>
+        <div class="sec-body">
+          <p class="cmd">$ pi-recon --target marinai --depth full</p>
+          <ul class="log" id="scanMe"></ul>
+          <p class="summary summary--ok">6 sources · classification: design-engineer hybrid · rarity: HIGH</p>
+        </div>
+      </div>
     </section>
 
     <!-- ░░ §05 ASSET PROFILE ░░ -->
-    <section class="block" id="s05">
-      <p class="tag tag--ok">§05 — Asset profile · ASSET-TLV-001 · VERIFIED · AVAILABLE</p>
-      <h2 class="huge huge--ok" data-write>Marinai</h2>
-      <p class="role">Principal Product Designer · Tel Aviv · 15+ yrs</p>
-      <p class="statement" data-write>The designer who reads the backend spec. Designs the pattern once, encodes it as code and agent context — and the violation never recurs.</p>
-
-      <p class="kicker">Career trace</p>
-      <dl class="rows" id="trace"></dl>
-
-      <p class="kicker">Recovered artifacts</p>
-      <dl class="rows" id="artifacts"></dl>
-
-      <p class="kicker">Observed behaviors</p>
-      <ul class="plain">
-        <li data-write>Builds the tool instead of writing the ticket.</li>
-        <li data-write>Leads a competitive acrobatics team. Risk appetite: calibrated.</li>
-        <li data-write>&ldquo;That&rsquo;s not a designer&rsquo;s job&rdquo; — not detected in any source.</li>
-      </ul>
+    <section class="block block--ice" id="s05">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="eyebrow eyebrow--ok">Verified · Available · ASSET-TLV-001</p>
+          <h2 class="display">Marina<span class="t-dot">.</span></h2>
+          <p class="lede">Principal Product Designer · Tel Aviv · 15+ yrs. The designer who reads the backend spec, designs the pattern once, encodes it as code and agent context — and the violation never recurs.</p>
+        </header>
+        <div class="sec-body">
+          <p class="kicker">Career trace</p>
+          <dl class="rows" id="trace"></dl>
+        </div>
+        <p class="kicker kicker--center">Recovered artifacts</p>
+        <div class="cards cards--4" id="artifacts"></div>
+        <div class="sec-body">
+          <p class="kicker">Observed behaviors</p>
+          <ul class="plain">
+            <li data-write>Builds the tool instead of writing the ticket.</li>
+            <li data-write>Leads a competitive acrobatics team. Risk appetite: calibrated.</li>
+            <li data-write>&ldquo;That&rsquo;s not a designer&rsquo;s job&rdquo; — not detected in any source.</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <!-- ░░ §06 COMPATIBILITY ░░ -->
-    <section class="block" id="s06">
-      <p class="tag">§06 — Compatibility</p>
-      <div id="match"></div>
-      <p class="summary summary--ok">match confidence: HIGH · false-positive probability: 0.00</p>
+    <section class="block block--white" id="s06">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="eyebrow">Faster together</p>
+          <h2 class="display">Same thesis.<br><span class="accent">Different surface.</span></h2>
+        </header>
+        <div class="cards cards--2" id="match"></div>
+        <p class="summary summary--center">match confidence: HIGH · false-positive probability: 0.00</p>
+      </div>
     </section>
 
     <!-- ░░ §07 REMEDIATION ░░ -->
-    <section class="block" id="s07">
-      <p class="tag">§07 — Remediation</p>
-      <pre class="diff" aria-label="org/team-structure.yaml diff"><code><span class="dl">-  designers: 0</span>
+    <section class="block block--ice" id="s07">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="eyebrow eyebrow--ok">Remediation available now</p>
+          <h2 class="display">Apply the fix<span class="t-dot">.</span></h2>
+        </header>
+        <div class="sec-body">
+          <pre class="diff" aria-label="org/team-structure.yaml diff"><code><span class="dl">-  designers: 0</span>
 <span class="ad">+  designers: 1</span>
 <span class="ad">+    role: principal-product-designer</span>
 <span class="ad">+    pattern: design-system-as-code</span>
 <span class="ad">+    recurrence: prevented</span></code></pre>
 
-      <p class="cta-kicker">Remediation available now</p>
-      <p class="cta-lead" data-write>This page is the proof of work: researched, designed, shipped as code — by the candidate.</p>
-      <div class="actions">
-        <a class="btn btn--primary" data-magnetic href="mailto:contact@pi.security?subject=Re:%20PI-2026-0314%20%E2%80%94%20DesignFunctionNotFound">APPLY FIX <span>&rsaquo;</span></a>
-        <a class="btn btn--ghost" data-magnetic href="https://marinka.me" target="_blank" rel="noreferrer">MARINKA.ME</a>
-      </div>
+          <p class="cta-lead" data-write>This page is the proof of work: researched, designed, shipped as code — by the candidate.</p>
+          <div class="actions">
+            <a class="btn btn--primary" data-magnetic href="mailto:contact@pi.security?subject=Re:%20PI-2026-0314%20%E2%80%94%20DesignFunctionNotFound">APPLY FIX <span>&rsaquo;</span></a>
+            <a class="btn btn--ghost" data-magnetic href="https://marinka.me" target="_blank" rel="noreferrer">MARINKA.ME</a>
+          </div>
 
-      <p class="footnote">Report ID ends in 0314. Not a coincidence. Not an irrational decision.</p>
+          <p class="footnote">Report ID ends in 0314. Not a coincidence. Not an irrational decision.</p>
+        </div>
+      </div>
     </section>
   </main>
 
