@@ -179,7 +179,7 @@
     gsap.utils.toArray("[data-write]").forEach((node) => {
       const words = splitWords(node);
       gsap.to(words, {
-        color: "#0E1411",
+        color: "#16203A",
         ease: "none",
         stagger: 0.5,
         scrollTrigger: { trigger: node, start: "top 88%", end: "top 45%", scrub: 0.3 },
@@ -224,7 +224,7 @@
   }
 
   /* ---------------- HERO INTRO — title decrypts (after boot) ---------------- */
-  const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&<>/\\";
+  const GLYPHS = "abcdefghijklmnopqrstuvwxyzABCDEFGHJKMNPQRSTUVWXYZ0123456789#$%&";
 
   function decodeLine(line, delay) {
     const text = line.textContent;
