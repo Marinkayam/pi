@@ -364,8 +364,8 @@ main{ position:relative; z-index:10; }
 /* ---------- HERO — serif editorial, full-bleed ---------- */
 .hero{
   position:relative; z-index:10; min-height:100svh;
-  display:flex; flex-direction:column; justify-content:center;
-  padding-bottom:78px;            /* room for the stats band */
+  display:flex; flex-direction:column; justify-content:flex-end;
+  padding-bottom:104px;            /* room for the stats band */
   overflow:hidden; cursor:crosshair;
 }
 /* faint technical grid */
@@ -429,8 +429,9 @@ main{ position:relative; z-index:10; }
 /* hand-drawn winter scene */
 .hero__art{
   position:absolute; z-index:1; pointer-events:none;
-  right:clamp(-30px,1.5vw,40px); bottom:84px;
-  width:min(76vw,920px); height:auto;
+  right:clamp(-40px,0vw,32px);
+  top:clamp(40px,7vh,96px); bottom:auto;
+  width:min(64vw,820px); height:auto;
   animation:float 7s ease-in-out infinite;
 }
 @keyframes float{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-9px); } }
@@ -439,7 +440,7 @@ main{ position:relative; z-index:10; }
 .il-trail{ animation:trail 2.6s linear infinite; }
 @keyframes trail{ to{ stroke-dashoffset:-36; } }
 @media (max-width:760px){
-  .hero__art{ width:96vw; right:-8vw; bottom:80px; }
+  .hero__art{ width:94vw; right:-6vw; top:64px; }
 }
 
 /* cursor-tracking crosshair + coordinates */
