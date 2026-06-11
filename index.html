@@ -45,13 +45,29 @@
   <main>
     <!-- ░░ HERO ░░ -->
     <section class="hero" id="hero">
-      <p class="meta hero__meta">PI-2026-0314 · JUNE 11, 2026 · 23H POST-STEALTH</p>
-      <h1 class="hero__title">
-        <span class="line"><span class="word">Dual</span> <span class="word">Vulnerability</span></span>
-        <span class="line"><span class="word">Assessment</span></span>
-      </h1>
-      <p class="hero__sub">Two scans, three passes deep.<br /><em>One critical finding. One available fix.</em></p>
-      <p class="hero__cue">scroll to run scan</p>
+      <div class="xhair" id="xhair" aria-hidden="true">
+        <i class="xh-v"></i><i class="xh-h"></i>
+        <span class="xh-coords" id="xhCoords">x.0000 · y.0000 · tracking</span>
+      </div>
+
+      <div class="hero__inner">
+        <p class="meta hero__meta">PI-2026-0314 · JUNE 11, 2026 · 23H POST-STEALTH</p>
+        <h1 class="hero__title" aria-label="Dual Vulnerability Assessment">
+          <span class="t-line t-line--1">Dual</span>
+          <span class="t-line t-line--2 t-line--outline">Vulnerability</span>
+          <span class="t-line t-line--3">Assessment<i class="t-dot">.</i></span>
+        </h1>
+        <div class="hero__foot">
+          <p class="hero__sub">Two scans, three passes deep.<br /><em>One critical finding. One available fix.</em></p>
+          <p class="hero__cue">scroll to run scan</p>
+        </div>
+      </div>
+
+      <div class="ticker" aria-hidden="true">
+        <div class="ticker__track">
+          <span>CRITICAL · 9.8 — DESIGNFUNCTIONNOTFOUND&nbsp;&nbsp;//&nbsp;&nbsp;ONE AVAILABLE FIX&nbsp;&nbsp;//&nbsp;&nbsp;TARGET LOCKED&nbsp;&nbsp;//&nbsp;&nbsp;PI-2026-0314&nbsp;&nbsp;//&nbsp;&nbsp;23H POST-STEALTH&nbsp;&nbsp;//&nbsp;&nbsp;</span><span>CRITICAL · 9.8 — DESIGNFUNCTIONNOTFOUND&nbsp;&nbsp;//&nbsp;&nbsp;ONE AVAILABLE FIX&nbsp;&nbsp;//&nbsp;&nbsp;TARGET LOCKED&nbsp;&nbsp;//&nbsp;&nbsp;PI-2026-0314&nbsp;&nbsp;//&nbsp;&nbsp;23H POST-STEALTH&nbsp;&nbsp;//&nbsp;&nbsp;</span>
+        </div>
+      </div>
     </section>
 
     <!-- ░░ §01 RECON ░░ -->

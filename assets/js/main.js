@@ -155,7 +155,7 @@
 
     if (reduced || !haveGsap) {
       // static, fully legible
-      document.querySelectorAll(".hero__title .word").forEach((w) => (w.style.transform = "none"));
+      document.querySelectorAll(".t-line").forEach((l) => l.classList.add("live"));
       document.querySelectorAll("[data-write]").forEach((n) => (n.style.color = "var(--ink)"));
       document.querySelectorAll(".log li, #chain .chain-item, .rows .row, #match .pair, .plain li").forEach((n) => (n.style.opacity = 1));
       return;
@@ -223,15 +223,74 @@
     });
   }
 
-  /* ---------------- HERO INTRO (after boot) ---------------- */
+  /* ---------------- HERO INTRO — title decrypts (after boot) ---------------- */
+  const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#$%&<>/\\";
+
+  function decodeLine(line, delay) {
+    const text = line.textContent;
+    line.textContent = "";
+    const chars = [];
+    for (const c of text) {
+      const s = document.createElement("span");
+      s.className = c === "." ? "ch dot" : "ch scrambling";
+      s.textContent = c;
+      line.appendChild(s);
+      chars.push({ el: s, target: c });
+    }
+    setTimeout(() => {
+      line.classList.add("live");
+      const start = performance.now();
+      const iv = setInterval(() => {
+        const t = performance.now() - start;
+        let pending = 0;
+        chars.forEach((c, i) => {
+          if (c.target === ".") { c.el.textContent = c.target; c.el.classList.remove("scrambling"); return; }
+          if (t > 240 + i * 52) {
+            c.el.textContent = c.target;
+            c.el.classList.remove("scrambling");
+          } else {
+            c.el.textContent = GLYPHS[(Math.random() * GLYPHS.length) | 0];
+            pending += 1;
+          }
+        });
+        if (!pending) clearInterval(iv);
+      }, 38);
+    }, delay);
+  }
+
   function playHero() {
-    if (typeof gsap === "undefined") {
-      document.querySelectorAll(".hero__title .word").forEach((w) => (w.style.transform = "none"));
+    if (typeof gsap === "undefined" || reduced) {
+      document.querySelectorAll(".t-line").forEach((l) => l.classList.add("live"));
       return;
     }
-    gsap.set(".hero__title .word", { yPercent: 110 });
-    gsap.to(".hero__title .word", { yPercent: 0, duration: 0.9, ease: "power4.out", stagger: 0.07, delay: 0.05 });
-    gsap.from(".hero__meta, .hero__sub, .hero__cue", { opacity: 0, y: 14, duration: 0.7, ease: "power3.out", stagger: 0.08, delay: 0.3 });
+    const lines = document.querySelectorAll(".t-line");
+    lines.forEach((line, i) => decodeLine(line, 60 + i * 160));
+    gsap.from(".hero__meta, .hero__sub, .hero__cue, .ticker", { opacity: 0, y: 12, duration: 0.7, ease: "power3.out", stagger: 0.09, delay: 0.4 });
+
+    /* hero drifts away as you scroll into the report */
+    gsap.to(".hero__inner", {
+      yPercent: -14, opacity: 0.25, ease: "none",
+      scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom 35%", scrub: 0.4 },
+    });
+  }
+
+  /* ---------------- CROSSHAIR TRACKER ---------------- */
+  function initXhair() {
+    const hero = $("#hero");
+    const xhair = $("#xhair");
+    if (!hero || !xhair || reduced || window.matchMedia("(hover:none)").matches) return;
+    const v = xhair.querySelector(".xh-v");
+    const h = xhair.querySelector(".xh-h");
+    const coords = $("#xhCoords");
+    hero.addEventListener("mousemove", (e) => {
+      const r = hero.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      v.style.left = x + "px";
+      h.style.top = y + "px";
+      coords.style.transform = `translate(${x + 14}px, ${y + 14}px)`;
+      coords.textContent = `x.${String(Math.round(x)).padStart(4, "0")} · y.${String(Math.round(y)).padStart(4, "0")} · tracking`;
+    });
   }
 
   /* ---------------- SECURITY-SCAN BOOT ---------------- */
@@ -306,6 +365,7 @@
   window.addEventListener("DOMContentLoaded", () => {
     init();
     initCursor();
+    initXhair();
     runBoot(playHero);
   });
 })();
