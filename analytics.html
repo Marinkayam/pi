@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>VISITOR TRACE · PI-2026-0314</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{--paper:#FBFDFD;--ink:#101418;--ink-soft:#5A646E;--line:#D9DDE0;--teal:#149C99;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;--disp:'Space Grotesk',sans-serif;}
+  *{box-sizing:border-box;margin:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:13px;}
+  .bar{background:var(--ink);color:#D9DDE0;font-size:11px;letter-spacing:.12em;
+    padding:10px 20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  main{max-width:1040px;margin:0 auto;padding:32px 20px 96px;}
+  h1{font-family:var(--disp);font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;margin:8px 0 24px;}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);margin-bottom:32px;}
+  .stat{background:var(--paper);padding:16px;}
+  .stat b{display:block;font-family:var(--disp);font-size:24px;font-weight:700;}
+  .stat span{font-size:10.5px;letter-spacing:.12em;color:var(--ink-soft);}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;font-size:10.5px;letter-spacing:.1em;color:var(--ink-soft);
+    font-weight:500;border-bottom:1px solid var(--ink);padding:8px 10px;}
+  td{border-bottom:1px solid var(--line);padding:9px 10px;vertical-align:top;white-space:nowrap;}
+  tbody tr{cursor:pointer;}
+  tbody tr:hover{background:#F1F4F5;}
+  .ret{color:var(--teal);}
+  .yes{color:var(--teal);font-weight:600;}
+  .bar-mini{display:inline-block;height:6px;background:var(--teal);vertical-align:middle;border-radius:3px;min-width:2px;}
+  .bar-track{display:inline-block;width:60px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;vertical-align:middle;margin-right:6px;}
+  #trace{display:none;border:1px solid var(--ink);margin-top:32px;}
+  #trace .thead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    border-bottom:1px solid var(--line);padding:10px 16px;font-size:11px;letter-spacing:.1em;color:var(--ink-soft);}
+  #tevents{padding:16px;display:flex;flex-direction:column;}
+  .ev{display:grid;grid-template-columns:70px 130px 1fr;gap:12px;padding:7px 0;border-bottom:1px solid var(--line);align-items:baseline;}
+  .ev:last-child{border-bottom:none;}
+  .ev .ts{color:var(--ink-soft);font-size:11px;}
+  .ev .ty{font-size:11px;letter-spacing:.06em;}
+  .ev .ty.page_view{color:var(--teal);}
+  .ev .ty.click{color:#D85A1E;}
+  .ev .ty.session_end{color:var(--ink-soft);}
+  .close{cursor:pointer;background:none;border:none;font-family:inherit;font-size:11px;
+    letter-spacing:.12em;color:var(--ink);text-decoration:underline;}
+  .empty{color:var(--ink-soft);padding:40px 0;text-align:center;letter-spacing:.08em;}
+  .err{border:1px solid var(--ink);padding:24px;letter-spacing:.06em;}
+</style>
+</head>
+<body>
+<div class="bar"><span>PI-SEC · INTERNAL · VISITOR TRACE</span><span id="clock"></span></div>
+<main>
+  <p style="font-size:11px;letter-spacing:.14em;color:var(--ink-soft);">§00 · TELEMETRY</p>
+  <h1>Who came, and what they did.</h1>
+  <div id="app"><p class="empty">DECRYPTING…</p></div>
+  <section id="trace">
+    <div class="thead">
+      <span id="tmeta"></span>
+      <button class="close" onclick="document.getElementById('trace').style.display='none'">CLOSE ×</button>
+    </div>
+    <div id="tevents"></div>
+  </section>
+</main>
+<script>
+(function () {
+  var key = new URLSearchParams(location.search).get('key') || '';
+  var app = document.getElementById('app');
+  document.getElementById('clock').textContent = new Date().toUTCString();
+
+  var fmt = function (ts) { return new Date(ts).toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }); };
+  var clock = function (ts) { return new Date(ts).toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit', second:'2-digit' }); };
+  var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]); }); };
+  var dur = function (ms) { if (!ms) return '·'; var s = Math.round(ms/1000); if (s < 60) return s + 's'; return Math.floor(s/60) + 'm ' + (s%60) + 's'; };
+  var refD = function (r) { if (!r) return 'direct'; try { return new URL(r).hostname.replace(/^www\./,''); } catch (e) { return 'direct'; } };
+
+  async function load() {
+    if (!key) { app.innerHTML = '<div class="err">ACCESS KEY REQUIRED · append ?key=…</div>'; return; }
+    var r;
+    try { r = await fetch('/api/analytics?key=' + encodeURIComponent(key)); }
+    catch (e) { app.innerHTML = '<div class="err">CHANNEL UNREACHABLE</div>'; return; }
+    if (!r.ok) { app.innerHTML = '<div class="err">ACCESS DENIED · check key</div>'; return; }
+    render(await r.json());
+  }
+
+  function stat(v, l) { return '<div class="stat"><b>' + v + '</b><span>' + l + '</span></div>'; }
+
+  function render(data) {
+    var s = data.stats, visits = data.visits || [];
+    var html = '<div class="stats">' +
+      stat(s.totalVisits, 'VISITS') +
+      stat(s.uniqueVisitors, 'UNIQUE VISITORS') +
+      stat(dur(s.avgDurationMs), 'AVG TIME') +
+      stat(s.amaVisits, 'ASKED THE AI') +
+      stat(esc(s.topRef), 'TOP SOURCE') +
+      '</div>';
+    if (!visits.length) {
+      html += '<p class="empty">NO VISITS RECORDED YET · (needs Upstash Redis connected) · GO SEND THE LINK</p>';
+    } else {
+      html += '<table><thead><tr><th>TIME</th><th>ORIGIN</th><th>SOURCE</th><th>TIME ON PAGE</th><th>SCROLL</th><th>SECTIONS</th><th>CLICKS</th><th>AI</th></tr></thead><tbody>' +
+        visits.map(function (v) {
+          return '<tr data-id="' + esc(v.visitId) + '">' +
+            '<td>' + fmt(v.startedAt) + (v.returning ? ' <span class="ret">↺</span>' : '') + '</td>' +
+            '<td>' + esc(v.city || '?') + (v.country ? ', ' + esc(v.country) : '') + '</td>' +
+            '<td>' + esc(refD(v.referrer)) + '</td>' +
+            '<td>' + dur(v.durationMs) + '</td>' +
+            '<td><span class="bar-track"><span class="bar-mini" style="width:' + (v.maxScroll || 0) * 0.6 + 'px"></span></span>' + (v.maxScroll || 0) + '%</td>' +
+            '<td>' + v.sections + '</td>' +
+            '<td>' + v.clicks + '</td>' +
+            '<td>' + (v.amaMessages ? '<span class="yes">' + v.amaMessages + '</span>' : '·') + '</td>' +
+          '</tr>';
+        }).join('') + '</tbody></table>';
+    }
+    app.innerHTML = html;
+    app.querySelectorAll('tbody tr').forEach(function (tr) {
+      tr.addEventListener('click', function () { openTrace(tr.dataset.id); });
+    });
+  }
+
+  async function openTrace(id) {
+    var r = await fetch('/api/analytics?key=' + encodeURIComponent(key) + '&visit=' + encodeURIComponent(id));
+    if (!r.ok) return;
+    var v = await r.json();
+    document.getElementById('tmeta').textContent =
+      'VISIT ' + id.slice(0, 8) + ' · ' + (v.city || '?') + (v.country ? ', ' + v.country : '') +
+      ' · ' + refD(v.referrer) + ' · ' + (v.screen || '') + ' · ' + dur(v.durationMs) + ' on page';
+    document.getElementById('tevents').innerHTML = (v.events || []).map(function (e) {
+      var lbl = e.label || '';
+      if (e.type === 'scroll_depth') lbl = 'scrolled to ' + lbl + '%';
+      if (e.type === 'session_end') lbl = 'left after ' + dur(e.durationMs) + (e.activeMs ? ' (' + dur(e.activeMs) + ' active)' : '');
+      if (e.type === 'page_view') lbl = 'landed' + (e.returning ? ' (returning)' : '') + (e.referrer ? ' from ' + refD(e.referrer) : '');
+      return '<div class="ev"><span class="ts">' + clock(e.t) + '</span><span class="ty ' + esc(e.type) + '">' + esc(e.type) + '</span><span>' + esc(lbl) + '</span></div>';
+    }).join('') || '<div class="ev"><span></span><span></span><span>no events</span></div>';
+    var t = document.getElementById('trace');
+    t.style.display = 'block';
+    t.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>

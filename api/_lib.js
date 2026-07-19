@@ -75,6 +75,51 @@ export async function logExchange({ sessionId, ipHash, city, country, userAgent,
   }
 }
 
+const VISIT_TTL_SECONDS = 60 * 24 * 3600; // keep visit records for 60 days
+
+/** Upsert one visitor's event stream (site analytics). Best-effort, never throws. */
+export async function logVisit({ visitId, visitorId, ipHash, city, country, userAgent, referrer, events }) {
+  try {
+    const key = `visit:${visitId}`;
+    const [got] = await redis(['GET', key]);
+    const now = Date.now();
+    const v = got?.result
+      ? JSON.parse(got.result)
+      : {
+          visitId, visitorId, startedAt: now, ipHash, city, country, userAgent,
+          referrer: referrer || '', path: '', screen: '', returning: false,
+          events: [], maxScroll: 0, amaMessages: 0, durationMs: 0,
+        };
+    v.lastAt = now;
+    for (const e of events || []) {
+      if (!e || !e.type) continue;
+      const ev = {
+        t: Number(e.t) || now,
+        type: String(e.type).slice(0, 40),
+        label: String(e.label ?? '').slice(0, 160),
+      };
+      if (e.type === 'page_view') {
+        v.path = String(e.path || '').slice(0, 200);
+        v.screen = String(e.screen || '').slice(0, 24);
+        v.returning = !!e.returning;
+        if (e.referrer) v.referrer = String(e.referrer).slice(0, 300);
+      }
+      if (e.type === 'scroll_depth') v.maxScroll = Math.max(v.maxScroll, Number(e.label) || 0);
+      if (e.type === 'session_end' && e.durationMs) v.durationMs = Number(e.durationMs);
+      if (e.type === 'ama_message_sent') v.amaMessages = (v.amaMessages || 0) + 1;
+      v.events.push(ev);
+    }
+    if (v.events.length > 400) v.events = v.events.slice(-400);
+    await redis(
+      ['SET', key, JSON.stringify(v)],
+      ['EXPIRE', key, String(VISIT_TTL_SECONDS)],
+      ['ZADD', 'visit:index', String(v.startedAt), visitId],
+    );
+  } catch (e) {
+    console.error('logVisit failed:', e.message);
+  }
+}
+
 export function requestMeta(req) {
   return {
     ip: (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || 'unknown',
