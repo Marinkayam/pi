@@ -726,6 +726,7 @@ main{ position:relative; z-index:10; }
 .t-line--1, .t-line--2, .t-line--3{
   display:inline-block; font-size:clamp(34px,5.8vw,72px); line-height:1.06; margin-top:0;
 }
+.t-line--2{ margin:0 .28ch; }
 .hero__sub{ margin:20px auto 30px; max-width:56ch; }
 .hero__cta{ margin:0 auto; }
 .hero__art, .hero__art--painted{
