@@ -9,89 +9,19 @@
   const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* ---------------- DATA ---------------- */
-  const PI_RECON = [
-    { divider: "pass 1 · surface" },
-    { name: "pi.security · one line, one pun", kind: "web",
-      intel: "entire public surface: one sentence and a pie pun. Operational discipline noted.",
-      url: "https://pi.security" },
-    { name: "press: geektime · calcalist · ynet · newswire", kind: "press",
-      intel: "$35M seed+A · 23 employees · TLV + SF. Asked why not $31.4M: “we try not to make irrational decisions.”",
-      url: "https://www.geektime.co.il/pi-security-funding/" },
-    { name: "linkedin.com/in/yoniramon · launch post", kind: "social",
-      intel: "founding principle extracted: learn once, never pay for the same lesson twice.",
-      url: "https://www.linkedin.com/in/yoniramon" },
-    { name: "W. Isaacson, “Elon Musk” · Y.R., Twitter takeover", kind: "book",
-      intel: "10+ years securing Tesla; appears in the biography securing Twitter during the takeover." },
-    { divider: "pass 2 · network" },
-    { name: "Brightmind Partners · fund DNA, portfolio graph", kind: "vc",
-      intel: "operator-led fund; partners ex-Armis, Tanium, Exabeam. Deep technical diligence is the brand." },
-    { name: "S. Ward · feed history, 30 days back", kind: "vc",
-      intel: "30 days pre-wire, quoting Glasswing: verify, disclose, patch: three bottlenecks, not one." },
-    { name: "Third Point · Kurtz · Armis founders · backer map", kind: "vc",
-      intel: "CrowdStrike’s CEO and Armis’ founders backing remediation. Insiders betting against their own dashboards." },
-    { name: "same-day round detected: Aryon (also Brightmind)", kind: "vc",
-      intel: "two security rounds, one fund, one day (June 10). Brightmind is consolidating the category." },
-    { divider: "pass 3 · thesis" },
-    { name: "Anthropic · Project Glasswing, first update", kind: "ai",
-      intel: "10,000+ critical vulnerabilities in month one. 530 disclosed. 75 patched. The bottleneck moved.",
-      url: "https://www.anthropic.com/research/glasswing-initial-update" },
-    { name: "Claude-Mythos references across launch coverage", kind: "ai",
-      intel: "Pi builds on Mythos-class models. So does this candidate, daily, with authored agent skills.",
-      url: "https://www.anthropic.com/news/expanding-project-glasswing" },
-    { name: "3 namesakes found (cameras, guards, robots) · disambiguated", kind: "meta", amber: true,
-      intel: "noise removed: a CCTV vendor, a guard service, a robotics firm. Locked on the right Pi." },
+  /* §01 — mirrors "Security is dragging behind development" + 3 cards */
+  const PROBLEM = [
+    { t: "CV overload", b: "Hundreds of applicants, identical portfolios, everyone ‘passionate about UX.’ Hard to identify what actually matters." },
+    { t: "Pretty screens, no systems", b: "Polished Dribbble shots don’t survive contact with an agentic security platform. You need someone who designs the system, not the screen." },
+    { t: "Design stops at handoff", b: "Most designers ship a Figma link and move on. What you build needs design that ships as code and keeps working." },
   ];
 
-  const ME_SOURCES = [
-    { name: "marinka.me", kind: "web",
-      intel: "shipped AI products recovered: Claude Vision PWA, API content studio, ops-automation builder. Designed, coded, deployed solo. fix vector: zero handoff tax between design and production.",
-      url: "https://marinka.me" },
-    { name: "npm · @monto/ui-v2", kind: "npm",
-      intel: "design system built from zero, published as code: 200+ React components live in production. fix vector: the pattern is designed once, encoded once. The violation can’t recur.",
-      url: "https://www.npmjs.com/package/@monto/ui-v2" },
-    { name: "monto.io · two production platforms", kind: "work",
-      intel: "sole designer on B2B fintech platforms moving real money: approvals, exceptions, trust surfaces. ~860 violations fixed at the system level. fix vector: remediation at the root, not the symptom. Pi’s founding principle, applied to design.",
-      url: "https://monto.io" },
-    { name: "linkedin.com · AI-design writing", kind: "social",
-      intel: "public record of design governance encoded as agent context: AI ships on-system UI, unsupervised. fix vector: the exact discipline an autonomous platform needs to earn human trust." },
-    { name: "College of Management · GenAI course", kind: "edu",
-      intel: "teaches Generative AI to ~200 students/year. fix vector: translating machine reasoning for humans is the day job. That is the unowned surface at Pi." },
-    { name: "shipped side projects", kind: "lab",
-      intel: "builds the tool instead of writing the ticket; leads a competitive acrobatics team. Risk appetite calibrated. fix vector: ships at machine speed on Pi’s own stack, Claude-Mythos, daily." },
-  ];
-
-  const CHAIN = [
-    { tag: "glasswing", text: "Anthropic’s Glasswing: 10,000+ critical vulnerabilities found in one month. 530 disclosed. The internet patched 75." },
-    { tag: "your lead investor", text: "Ward, 30 days before wiring $35M: verify, disclose, patch. Three bottlenecks, not one." },
-    { tag: "deduction", text: "Offense now scales at machine speed. The only defense left is remediation velocity. Pi exists to collapse bottleneck #3." },
-    { tag: "convergence", text: "Pi runs on Claude-Mythos. The candidate builds with the same models daily. Design governance as agent context. Same stack. Different surface." },
-  ];
-
-  const EVIDENCE = [
-    { src: "headcount", text: "23 employees, Tel Aviv + San Francisco. Designers: 0." },
-    { src: "founding principle", text: "Learn once. Never pay for the same lesson twice." },
-    { src: "product", text: "Context is the moat, yet the surface where humans trust an autonomous fix has no owner." },
-    { src: "customers", text: "A leading AI lab and cybersecurity firms. Maximum design literacy, minimum patience." },
-  ];
-
-  const TIMELINE = [
-    { period: "now", role: "Principal Product Designer · Monto, B2B fintech", detail: "Sole designer. Two production platforms. Owns the design system end to end." },
-    { period: "ongoing", role: "Lecturer, Generative AI · College of Management", detail: "~200 students/year." },
-    { period: "origin", role: "Global Art Direction · Moog.it", detail: "Lancôme, Guinness, Stella Artois." },
-  ];
-
-  const ARTIFACTS = [
-    { name: "@monto/ui-v2", tag: "design system", detail: "Built from zero. Published npm package. 200+ React components in production." },
-    { name: "platform remediation", tag: "root cause", detail: "~860 violations found, fixed at the system level. Recurrence: prevented." },
-    { name: "Claude Skills suite", tag: "ai infra", detail: "Design governance encoded as agent context. AI ships on-system UI, unsupervised." },
-    { name: "shipped AI products", tag: "end to end", detail: "Claude Vision PWA, Claude API content studio, ops-automation builder. Designed, coded, deployed. Solo." },
-  ];
-
-  const MATCH = [
-    { pi: "Context separates signal from noise", me: "Three recon passes before the first pixel of this page" },
-    { pi: "Learn once, never pay twice", me: "Fix the pattern, publish the package, make the violation impossible" },
-    { pi: "Autonomous fixes need human trust", me: "Years designing trust surfaces in fintech: approvals, exceptions, money on the line" },
-    { pi: "Ship at machine speed", me: "Figma to production component with Claude Code. No handoff tax" },
+  /* §02 — mirrors their 4-step Ingest / Detect / Remediate / Enforce */
+  const STEPS = [
+    { n: "01", t: "Ingest everything", b: "I read the backend spec, the codebase, and the support tickets before opening a design tool. Design starts from how the system actually works." },
+    { n: "02", t: "Detect root causes", b: "I fix the pattern, not the screen. One decision, applied across every surface." },
+    { n: "03", t: "Remediate in context", b: "Design delivered as working code, straight into developer workflows. Proof: the page you're reading." },
+    { n: "04", t: "Enforce what was learned", b: "Design system as code plus agent context. Violations get prevented, not reviewed." },
   ];
 
   const $ = (s, r = document) => r.querySelector(s);
@@ -113,81 +43,15 @@
     wrench: I('<path d="M15 7a4 4 0 0 1-5.2 5.2L5 17l2 2 4.8-4.8A4 4 0 0 0 17 9z"/><circle cx="6" cy="18" r="1" />', "i-swing"),
     cpu: I('<rect x="7" y="7" width="10" height="10" rx="2.5"/><rect x="10.5" y="10.5" width="3" height="3" rx="1"/><path d="M10 3v3M14 3v3M10 18v3M14 18v3M3 10h3M3 14h3M18 10h3M18 14h3"/>', "i-pulse"),
     rocket: I('<path d="M5 15c-1.4 2.2-1.4 4.4-1.4 4.4s2.2 0 4.4-1.4"/><path d="M9 15l-3-3c1-6 5-9 12-9 0 7-3 11-9 12z"/><circle cx="14" cy="10" r="1.7"/><path d="M15.5 3.5c2 .8 4.2 3 5 5"/>', "i-launch"),
+    /* CV overload — a pile of résumés stacking up */
+    docstack: I('<path d="M4.5 8.5v8A2 2 0 0 0 6.5 18.5H13"/><path d="M9 4.5h4.5l3 3v8.5A1.6 1.6 0 0 1 14.9 17.6H8.6A1.6 1.6 0 0 1 7 16V6.1A1.6 1.6 0 0 1 8.6 4.5Z"/><path d="M13.5 4.5v3.2h3"/><path d="M9.6 11h4.2M9.6 13.6h4.2M9.6 8.6h2.2"/>', "i-float"),
+    /* Pretty screens, no systems — a polished picture/shot in a frame */
+    gallery: I('<rect x="3.5" y="5" width="17" height="14" rx="2.6"/><circle cx="8.8" cy="10" r="1.5"/><path d="M4.4 16.6l4.4-4 3 2.6 3.4-3.4 4.4 4.4"/>', "i-float"),
+    /* Design stops at handoff — an arrow leaving the file, trailing off to nothing */
+    handoff: I('<rect x="3.5" y="6" width="8.5" height="12" rx="2"/><path d="M6.8 10.4h2.4M6.8 13.4h3.4"/><path d="M12.5 12H18"/><path d="M15.4 9l3 3-3 3"/><path d="M20.4 12h1.1"/>', "i-swing"),
   };
 
   /* ---------------- BUILD DOM ---------------- */
-  function buildLog(target, items) {
-    const ul = $(target);
-    items.forEach((it) => {
-      if (it.divider) { ul.appendChild(el("li", "div", `── ${it.divider}`)); return; }
-      const li = el("li", it.amber ? "amber" : "");
-      const expandable = it.intel !== undefined;
-
-      const row = el("div", "log__row");
-      row.appendChild(el("span", "src", `<b>[${it.kind}]</b> ${it.name}`));
-      const right = el("span", "log__right");
-      right.appendChild(el("span", "stat", it.amber ? "✓ resolved" : "✓ indexed"));
-      if (expandable) right.appendChild(el("span", "log__tog", "+"));
-      row.appendChild(right);
-      li.appendChild(row);
-
-      if (expandable) {
-        li.classList.add("expandable");
-        li.setAttribute("role", "button");
-        li.setAttribute("tabindex", "0");
-        li.setAttribute("aria-expanded", "false");
-
-        const intel = el("div", "log__intel");
-        const inner = el("div", "log__intel-in");
-        inner.appendChild(document.createTextNode(`⤷ ${it.intel || "no public trace"}`));
-        if (it.url) {
-          inner.appendChild(document.createTextNode(" "));
-          const a = el("a", "log__source", "[source ↗]");
-          a.href = it.url;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-          a.addEventListener("click", (e) => e.stopPropagation());
-          inner.appendChild(a);
-        }
-        intel.appendChild(inner);
-        li.appendChild(intel);
-
-        const toggle = () => {
-          const open = li.classList.toggle("is-open");
-          li.setAttribute("aria-expanded", open ? "true" : "false");
-        };
-        li.addEventListener("click", toggle);
-        li.addEventListener("keydown", (e) => {
-          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); }
-        });
-      }
-      ul.appendChild(li);
-    });
-  }
-
-  function buildChain() {
-    const wrap = $("#chain");
-    CHAIN.forEach((c, i) => {
-      const item = el("div", "chain-item" + (i === CHAIN.length - 1 ? " is-end" : ""));
-      item.appendChild(el("span", "chain-tag", c.tag));
-      const p = el("p", "statement", c.text);
-      p.setAttribute("data-write", "");
-      item.appendChild(p);
-      wrap.appendChild(item);
-    });
-  }
-
-  function buildRows(target, items, cls, map) {
-    const dl = $(target);
-    dl.classList.add(cls);
-    items.forEach((it) => {
-      const row = el("div", "row");
-      row.appendChild(el("dt", "row__key", map.key(it)));
-      row.appendChild(el("dd", "row__val", map.val(it)));
-      dl.appendChild(row);
-    });
-  }
-
   function buildCards(target, items, opts) {
     const wrap = $(target);
     items.forEach((it, i) => {
@@ -200,23 +64,6 @@
     });
   }
 
-  function buildMatch() {
-    const wrap = $("#match");
-    MATCH.forEach((m) => {
-      const card = el("article", "card card--match");
-      card.appendChild(el("p", "card__pi", `PI · ${m.pi}`));
-      card.appendChild(el("p", "card__fix", m.me));
-      wrap.appendChild(card);
-    });
-  }
-
-  buildLog("#scanPi", PI_RECON);
-  buildLog("#scanMe", ME_SOURCES);
-  buildChain();
-  buildCards("#evidence", EVIDENCE, { crit: true, icons: ["users", "book", "layers", "shield"], title: (e) => e.src, body: (e) => e.text });
-  buildRows("#trace", TIMELINE, "rows--ok", { key: (t) => t.period, val: (t) => `${t.role}<small>${t.detail}</small>` });
-  buildCards("#artifacts", ARTIFACTS, { icons: ["package", "wrench", "cpu", "rocket"], label: (a) => a.tag, title: (a) => a.name, body: (a) => a.detail });
-  buildMatch();
 
   /* uniform pathLength so CSS can draw every shape with one rule */
   document.querySelectorAll(".card__icon svg *").forEach((n) => n.setAttribute("pathLength", "100"));
@@ -434,7 +281,7 @@
       ["handshake TLS1.3 · ECDHE-P521", hex()],
       ["port sweep 0–65535 · open: 80, 443, 0314", "ok"],
       ["fingerprint pi.security → match", hex()],
-      ["deploying counter-scan: marina", "ok"],
+      ["loading candidate profile: marina", "ok"],
       ["context graph · 12 sources indexed", "ok"],
     ];
     const phases = ["SCANNING", "DECRYPTING", "TRACING"];
@@ -464,9 +311,9 @@
         pct.textContent = "100%";
         boot.classList.add("locked");
         status.textContent = "ACCESS GRANTED";
-        setTimeout(finish, 950);
+        setTimeout(finish, 420);
       }
-    }, 195);
+    }, 115);
   }
 
   /* ---------------- CURSOR + MAGNETIC ---------------- */
