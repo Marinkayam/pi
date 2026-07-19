@@ -2,6 +2,7 @@
   "name": "pi-2026-0314",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Dual Vulnerability Assessment — an awwwards-style landing page / portfolio for a principal product designer who codes and builds with AI.",
   "scripts": {
     "start": "npx --yes serve -l 5173 .",

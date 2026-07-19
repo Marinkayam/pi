@@ -645,6 +645,56 @@ main{ position:relative; z-index:10; }
   .contact dd a{ font-size:13px; word-break:break-all; }
 }
 
+/* §04 · MARINA ice tiles — mirror of Pi's Sloane section (pure CSS) */
+.ice-row{ display:flex; justify-content:center; gap:clamp(8px,1.4vw,14px); flex-wrap:wrap; margin:8px 0 26px; }
+.ice{
+  position:relative; overflow:hidden;
+  width:clamp(52px,11vw,116px); aspect-ratio:1;
+  display:grid; place-items:center;
+  font-family:var(--sans); font-weight:600; letter-spacing:-.01em;
+  font-size:clamp(28px,6vw,60px); color:#9DBBDD;
+  text-shadow:0 1px 0 rgba(255,255,255,.8);
+  background:linear-gradient(160deg,#F3FBFC,#D8EEF4);
+  border-radius:18%;
+  box-shadow:
+    inset 0 2px 6px rgba(255,255,255,.9),
+    inset 0 -6px 12px rgba(150,200,215,.35),
+    inset 0 0 0 1px #BFE2EC,
+    0 14px 28px -12px rgba(120,170,190,.45);
+}
+.ice::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(115deg, transparent 30%, rgba(255,255,255,.55) 42%, transparent 48%, rgba(255,255,255,.3) 60%, transparent 66%);
+}
+.ice:nth-child(1){ transform:rotate(-3deg) translateY(4px); }
+.ice:nth-child(2){ transform:rotate(2deg) translateY(-3px); }
+.ice:nth-child(3){ transform:rotate(-1.5deg) translateY(2px); }
+.ice:nth-child(4){ transform:rotate(3deg) translateY(-2px); }
+.ice:nth-child(5){ transform:rotate(-2deg) translateY(3px); }
+.ice:nth-child(6){ transform:rotate(2.5deg) translateY(-4px); }
+@media (hover:hover) and (prefers-reduced-motion:no-preference){
+  .ice{ transition:transform .25s ease; }
+  .ice:hover{ transform:rotate(0deg) translateY(-6px) scale(1.03); }
+}
+
+/* §04 · AMA console — map the widget tokens onto the site, round + teal it */
+#ama-root{
+  margin-top:clamp(32px,6vw,56px);
+  --ama-paper:#FFFFFF; --ama-ink:var(--ink); --ama-ink-soft:var(--ink-soft);
+  --ama-line:var(--line); --ama-mono:var(--mono);
+}
+#ama-root .ama-console{
+  border-radius:16px; overflow:hidden;
+  box-shadow:0 30px 60px -44px rgba(22,32,58,.4);
+}
+#ama-root .ama-live{ background:var(--teal) !important; box-shadow:0 0 8px var(--teal); }
+#ama-root .ama-msg-ai::before{ color:var(--teal-deep); }
+#ama-root .ama-chip{ border-radius:8px; }
+#ama-root .ama-chip:hover, #ama-root .ama-chip:focus-visible{ border-color:var(--teal-deep); color:var(--teal-deep); }
+#ama-root .ama-send{ background:var(--teal); border-color:var(--teal); color:#fff; border-radius:8px; letter-spacing:.16em; }
+#ama-root .ama-send:hover:not(:disabled){ background:var(--teal-deep); border-color:var(--teal-deep); }
+#ama-root .ama-limit a{ color:var(--teal-deep); }
+
 /* ---------- REDUCED MOTION ---------- */
 @media (prefers-reduced-motion: reduce){
   *, *::before, *::after{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }

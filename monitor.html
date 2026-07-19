@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>INTERCEPTED SESSIONS · PI-2026-0314</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{--paper:#FBFDFD;--ink:#101418;--ink-soft:#5A646E;--line:#D9DDE0;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;--disp:'Space Grotesk',sans-serif;}
+  *{box-sizing:border-box;margin:0;}
+  body{background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:13px;}
+  .bar{background:var(--ink);color:#D9DDE0;font-size:11px;letter-spacing:.12em;
+    padding:10px 20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  main{max-width:960px;margin:0 auto;padding:32px 20px 96px;}
+  h1{font-family:var(--disp);font-size:clamp(26px,4vw,38px);letter-spacing:-.02em;margin:8px 0 24px;}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;
+    background:var(--line);border:1px solid var(--line);margin-bottom:32px;}
+  .stat{background:var(--paper);padding:16px;}
+  .stat b{display:block;font-family:var(--disp);font-size:26px;font-weight:700;}
+  .stat span{font-size:10.5px;letter-spacing:.12em;color:var(--ink-soft);}
+  table{width:100%;border-collapse:collapse;}
+  th{text-align:left;font-size:10.5px;letter-spacing:.12em;color:var(--ink-soft);
+    font-weight:500;border-bottom:1px solid var(--ink);padding:8px 10px;}
+  td{border-bottom:1px solid var(--line);padding:10px;vertical-align:top;}
+  tbody tr{cursor:pointer;}
+  tbody tr:hover{background:#F1F4F5;}
+  .q{color:var(--ink-soft);max-width:340px;overflow:hidden;text-overflow:ellipsis;
+    white-space:nowrap;display:block;}
+  .chip{display:inline-block;border:1px solid var(--line);font-size:10px;
+    padding:2px 6px;margin:1px 2px 1px 0;color:var(--ink-soft);}
+  #transcript{display:none;border:1px solid var(--ink);margin-top:32px;}
+  #transcript .thead{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;
+    border-bottom:1px solid var(--line);padding:10px 16px;font-size:11px;
+    letter-spacing:.1em;color:var(--ink-soft);}
+  #tmsgs{padding:20px 16px;display:flex;flex-direction:column;gap:14px;line-height:1.65;}
+  .m-user{color:var(--ink-soft);}
+  .m-user::before{content:'visitor    > ';white-space:pre;}
+  .m-ai{white-space:pre-wrap;}
+  .m-ai::before{content:'pi-analyst > ';white-space:pre;color:var(--ink-soft);}
+  .close{cursor:pointer;background:none;border:none;font-family:inherit;
+    font-size:11px;letter-spacing:.12em;color:var(--ink);text-decoration:underline;}
+  .empty{color:var(--ink-soft);padding:40px 0;text-align:center;letter-spacing:.08em;}
+  .err{border:1px solid var(--ink);padding:24px;letter-spacing:.06em;}
+</style>
+</head>
+<body>
+<div class="bar"><span>PI-SEC · INTERNAL · MONITOR</span><span id="clock"></span></div>
+<main>
+  <p style="font-size:11px;letter-spacing:.14em;color:var(--ink-soft);">§00 · SURVEILLANCE</p>
+  <h1>Intercepted sessions.</h1>
+  <div id="app"><p class="empty">DECRYPTING…</p></div>
+  <section id="transcript">
+    <div class="thead">
+      <span id="tmeta"></span>
+      <button class="close" onclick="document.getElementById('transcript').style.display='none'">CLOSE ×</button>
+    </div>
+    <div id="tmsgs"></div>
+  </section>
+</main>
+<script>
+(function () {
+  const key = new URLSearchParams(location.search).get('key') || '';
+  const app = document.getElementById('app');
+  document.getElementById('clock').textContent = new Date().toUTCString();
+
+  const fmt = (ts) => new Date(ts).toLocaleString('en-GB', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  async function load() {
+    if (!key) { app.innerHTML = '<div class="err">ACCESS KEY REQUIRED · append ?key=…</div>'; return; }
+    let r;
+    try { r = await fetch('/api/monitor?key=' + encodeURIComponent(key)); }
+    catch { app.innerHTML = '<div class="err">CHANNEL UNREACHABLE</div>'; return; }
+    if (!r.ok) { app.innerHTML = '<div class="err">ACCESS DENIED · check key</div>'; return; }
+    const data = await r.json();
+    render(data);
+  }
+
+  function render({ stats, sessions }) {
+    let html = '<div class="stats">' +
+      stat(stats.totalSessions, 'SESSIONS') +
+      stat(stats.totalQueries, 'QUERIES') +
+      stat(stats.avgQueries, 'AVG / SESSION') +
+      stat(esc(stats.topChip), 'TOP CHIP') +
+      '</div>';
+    if (!sessions.length) {
+      html += '<p class="empty">NO SESSIONS INTERCEPTED YET · GO SEND THE LINK</p>';
+    } else {
+      html += '<table><thead><tr><th>TIME</th><th>ORIGIN</th><th>Q</th><th>CHIPS</th><th>FIRST QUERY</th></tr></thead><tbody>' +
+        sessions.map((s) =>
+          `<tr data-id="${esc(s.sessionId)}">
+            <td>${fmt(s.startedAt)}</td>
+            <td>${esc(s.city || '?')}${s.country ? ', ' + esc(s.country) : ''}</td>
+            <td>${s.queries}</td>
+            <td>${(s.chipUsed || []).map((c) => `<span class="chip">${esc(c)}</span>`).join('') || '·'}</td>
+            <td><span class="q">${esc(s.firstQuestion)}</span></td>
+          </tr>`).join('') +
+        '</tbody></table>';
+    }
+    app.innerHTML = html;
+    app.querySelectorAll('tbody tr').forEach((tr) =>
+      tr.addEventListener('click', () => openTranscript(tr.dataset.id)));
+  }
+
+  function stat(v, l) { return `<div class="stat"><b>${v}</b><span>${l}</span></div>`; }
+
+  async function openTranscript(id) {
+    const r = await fetch('/api/monitor?key=' + encodeURIComponent(key) + '&session=' + encodeURIComponent(id));
+    if (!r.ok) return;
+    const conv = await r.json();
+    document.getElementById('tmeta').textContent =
+      `SESSION ${id.slice(0, 8)} · ${conv.city || '?'}${conv.country ? ', ' + conv.country : ''} · ${fmt(conv.startedAt)}`;
+    document.getElementById('tmsgs').innerHTML = conv.messages
+      .map((m) => `<div class="${m.role === 'user' ? 'm-user' : 'm-ai'}">${esc(m.content)}</div>`)
+      .join('');
+    const t = document.getElementById('transcript');
+    t.style.display = 'block';
+    t.scrollIntoView({ behavior: 'smooth' });
+  }
+
+  load();
+})();
+</script>
+</body>
+</html>
