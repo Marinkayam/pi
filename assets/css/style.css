@@ -718,6 +718,16 @@ main{ position:relative; z-index:10; }
 #ama-root .ama-send{ background:var(--teal); border-color:var(--teal); color:#fff; border-radius:8px; letter-spacing:.16em; }
 #ama-root .ama-send:hover:not(:disabled){ background:var(--teal-deep); border-color:var(--teal-deep); }
 #ama-root .ama-limit a{ color:var(--teal-deep); }
+/* mobile: keep the input row + RUN button from overflowing the console */
+#ama-root .ama-input{ min-width:0; }
+@media (max-width:560px){
+  #ama-root .ama-prefix{ display:none; }
+  #ama-root .ama-inputrow{ padding:10px 12px; gap:8px; }
+  #ama-root .ama-send{ padding:8px 12px; flex-shrink:0; }
+  #ama-root .ama-log{ padding:16px 12px; }
+  #ama-root .ama-chips{ padding:0 12px 12px; }
+  #ama-root .ama-head, #ama-root .ama-foot{ padding-left:12px; padding-right:12px; }
+}
 
 /* ---------- HERO v2 — centered, one-line headline, art below (Pi's layout) ---------- */
 .hero{ justify-content:flex-start; padding-top:clamp(88px,11vh,140px); }
