@@ -5,8 +5,8 @@
 
 import crypto from 'node:crypto';
 
-const URL_ = process.env.KV_REST_API_URL;
-const TOKEN = process.env.KV_REST_API_TOKEN;
+const URL_ = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || process.env.REDIS_REST_URL;
+const TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || process.env.REDIS_REST_TOKEN;
 
 /** Run a pipeline of Redis commands. Each command is an array, e.g. ['GET','key']. */
 export async function redis(...commands) {
